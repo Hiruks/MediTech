@@ -1,0 +1,10 @@
+@import url('https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbFNXQWVrcE1FSnZuZnRkTm1LbUtkWFhWU2RzZ3xBQ3Jtc0trMHBEMDJzWTFSeWxDSFRFVE1FbXJ2NE5sTVFRYl9ZeHVHS3k1UUY0c2p5YXFVNy1QRXFCalBHODdkeE9sbGFFYWFYelNvRlAzVl8zMHZEVVVQTEJoQTJ2Nmx6aHRUd1ZtN09PQk4xaGpROWU5emlJYw&q=https%3A%2F%2Ffonts.googleapis.com%2Fcss2%3Ffamily%3DPoppins%3Awght%40400%3B500%26display%3Dswap%27%29%3B&v=oF28ns9eVdc');
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+}
+
+.box-area{
+    width: 930px;
+}
