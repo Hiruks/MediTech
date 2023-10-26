@@ -49,6 +49,7 @@ body{
 
 a{
     color: var(--color-dark);
+    text-decoration: none;
 }
 
 img{
@@ -80,7 +81,7 @@ p{
     color: var(--color-dark-variant);
 }
 
-.logo{
+.logoo{
     padding-left: 20px;
 }
 
@@ -92,7 +93,7 @@ p{
     color: var(--color-primary);
 }
 
-.danger{
+.dangerr{
     color: var(--color-danger);
 }
 
@@ -104,41 +105,33 @@ p{
     color: var(--color-warning);
 }
 
-.container{
-    display: grid;
-    width: 96%;
-    margin: 0 auto;
-    gap: 1.8rem;
-    grid-template-columns: 12rem auto 23rem;
-}
-
 aside{
     height: 100vh;
 }
 
-aside .toggle{
+aside .togglee{
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 1.4rem;
 }
 
-aside .toggle .logo{
+aside .togglee .logoo{
     display: flex;
     gap: 0.5rem;
 }
 
-aside .toggle .logo img{
+aside .togglee .logoo img{
     width: 2rem;
     height: 2rem;
 }
 
-aside .toggle .close{
+aside .togglee .closee{
     padding-right: 1rem;
     display: none;
 }
 
-aside .sidebar{
+aside .sidebarr{
     display: flex;
     flex-direction: column;
     background-color: var(--color-white);
@@ -150,11 +143,11 @@ aside .sidebar{
     transition: all 0.3s ease;
 }
 
-aside .sidebar:hover{
+aside .sidebarr:hover{
     box-shadow: none;
 }
 
-aside .sidebar a{
+aside .sidebarr a{
     display: flex;
     align-items: center;
     color: var(--color-info-dark);
@@ -165,40 +158,55 @@ aside .sidebar a{
     transition: all 0.3s ease;
 }
 
-aside .sidebar a span{
+aside .sidebarr a span{
     font-size: 1.6rem;
     transition: all 0.3s ease;
 }
 
-aside .sidebar a:last-child{
+aside .sidebarr a:last-child{
     position: absolute;
     bottom: 2rem;
     width: 100%;
 }
 
-aside .sidebar a.active{
+aside .sidebarr a.active{
     width: 100%;
     color: var(--color-primary);
     background-color: var(--color-light);
     margin-left: 0;
 }
 
-aside .sidebar a.active::before{
+aside .sidebarr a.active::before{
     content: '';
     width: 6px;
     height: 18px;
     background-color: var(--color-primary);
 }
 
-aside .sidebar a.active span{
+aside .sidebarr a.active span{
     color: var(--color-primary);
     margin-left: calc(1rem - 3px);
 }
 
-aside .sidebar a:hover{
+aside .sidebarr a:hover{
     color: var(--color-primary);
 }
 
-aside .sidebar a:hover span{
+aside .sidebarr a:hover span{
     margin-left: 0.6rem;
+}
+
+@media screen and (min-width: 1200x) {
+    aside .logoo h2{
+        display: none;
+    }
+
+    aside .sidebarr h3{
+        display: none;
+    }
+
+    aside .sidebarr a:last-child{
+        position: relative;
+        margin-top: 1.8rem;
+    }
 }
