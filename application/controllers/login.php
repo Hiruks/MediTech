@@ -21,7 +21,7 @@ class Login extends CI_Controller {
 	}
 
 	public function loginSubmit(){
-		print_r($_POST);
+		//print_r($_POST);
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
         if ($this->form_validation->run() == FALSE){
@@ -35,7 +35,7 @@ class Login extends CI_Controller {
              if($result){
                 // set session 
                 $resutlUserData = $this->user_model->getUserData($data);
-                print_r($resutlUserData);
+                //print_r($resutlUserData);
                 $session_user = array(
                     'id'=> $resutlUserData[0]->userid,
                     'login'=> true,
@@ -120,10 +120,11 @@ class Login extends CI_Controller {
                 // update session object with new session data
                 $this->session->set_userdata('userinfo', $session_user);
                 $this->session->set_userdata('routing', $actions);
+                $this->session->set_flashdata('success', 'Login Successful');
                 redirect('login/dashboard');
             }else{
 
-                //$this->session->set_flashdata('error','Email or password incorrect. Please check');
+                $this->session->set_flashdata('error','Invalid email/password. Please try again.');
                 redirect('login/userlogin');
 
              }
@@ -132,12 +133,63 @@ class Login extends CI_Controller {
 	
 
 	public function dashboard(){
-		$this->load->view('dashboard');
+        $success = $this->session->flashdata('success');
+		$error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+		if(isset($data['error']) || isset($data['success'])){
+            $this->load->view('dashboard',$data);
+        }else{
+            if($this->checkSessionExist()){
+                $this->load->view('dashboard',$data);
+            }else{
+                $this->load->view('auth/login',$data);
+            }
+        }
 	}
 
 	public function userlogin(){
-		$this->load->view('auth/login');
+        $success = $this->session->flashdata('success');
+		$error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if(isset($data['error']) || isset($data['success'])){
+            $this->load->view('auth/login',$data);
+        }else{
+            if($this->checkSessionExist()){
+                $this->load->view('dashboard',$data);
+            }else{
+                $this->load->view('auth/login',$data);
+            }
+        }
+
 	}
+
+    private function checkSessionExist(){
+        if(!$this->session->has_userdata('userinfo')){
+            $this->session->set_flashdata('error','Please login first to access the page');
+            redirect('login/userlogin');
+        }else{
+            return true;
+        }
+    }
+
+    public function logout(){
+        $this->session->unset_userdata('userinfo');
+        $this->session->set_flashdata('success','Logout successful.');
+            redirect('login/userlogin');
+        
+    }
 
 }
 
