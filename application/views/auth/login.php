@@ -17,12 +17,13 @@
             </div>
             <div class="col-md-6 right-box">
                 <div class="row align-items-center ">
-                    <div class="header-text mt-5 ps-4 ">
-                        <p class="fs-5">Hello, Again</p>
-                        <p class="fs-6">We are happy to have you back!</p>
+                    <div class="header-text mt-4 ps-4 ">
+                        <p class="fs-5">Login</p>
+                        <p class="fs-6">Hello, happy to have you back!</p>
                     </div>
-                    <div class="input-group ">
-                        <table class="table table-borderless" style="width:400px">
+
+                    <?php echo form_open('login/loginSubmit') ?>
+                        <table class="table table-borderless" >
                             <tr>
                                 <td>
                                     <input class="form-control" type="text" name="email" placeholder="Login Email">
@@ -39,7 +40,8 @@
                                 </td>
                                 </tr>
                             </table>
-                    </div>
+                    <?php echo form_close(); ?>
+
                 </div>
             </div>
         </div>
