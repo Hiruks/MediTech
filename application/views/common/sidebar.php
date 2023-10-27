@@ -2,7 +2,7 @@
 <aside>
 
     <div class="sidebarr">
-        <a href="#" class="list-unstyled">
+        <a href="<?php echo site_url(); ?>/login/dashboard" class="list-unstyled">
             <span class="material-icons">
                 dashboard
             </span>

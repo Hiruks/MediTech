@@ -9,7 +9,9 @@
             </div>
             <div class="align-self-center" style="justify-content: center;">
             <h2 style="margin-bottom: 0rem;">Medi<span class="dangerr">Tech.</span></h2>
+            
             </div>
+            
         </div>
     
   </a>
@@ -23,29 +25,57 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
+        
+        
+    </ul>
       
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <div class="d-flex" >
+      
+        
+        <!-- The User Profile Buttons -->
+        <div class="profile-dropdown" >
+            <div class="profile-dropdown-btn" onclick="toggleMenu()">
+                <div class="profile-img">
+                    <i class="fa-solid fa-circle"></i>
+                </div>
+                <span>
+                    Hitller
+                    <i class="fa-solid fa-angle-down"></i>
+                </span>
+            </div>
+            
+
+            <ul class="profile-dropdown-list" id="subMenu">
+                <li class="profile-dropdown-list-item">
+                    <a href="<?php echo site_url(); ?>/login/profile">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="profile-dropdown-list-item">
+                    <a href="#">
+                        <i class="fa-solid fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="profile-dropdown-list-item">
+                    <a href="<?php echo site_url(); ?>/login/logout">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            </ul>
+        </div>
+        
+      </div>
     </div>
   </div>
+  <script>
+    let subMenu = document.getElementById("subMenu");
+
+    function toggleMenu() {
+        subMenu.classList.toggle("active");
+    }
+  </script>
 </nav>

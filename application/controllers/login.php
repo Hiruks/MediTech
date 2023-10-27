@@ -20,6 +20,29 @@ class Login extends CI_Controller {
 		$this->load->view('auth/register');
 	}
 
+    public function profile(){
+        $success = $this->session->flashdata('success');
+		$error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        $sessionData = $this->session->userdata('userinfo');
+        // print_r($sessionData);
+        if($this->checkSessionExist()){
+
+            $result = $this->user_model->getUserDataByID($sessionData['id']);
+            if($result){
+                $data['myprofile'] = $result;
+                $this->load->view('profile',$data);
+            }
+            
+        }
+        
+    }
 	public function loginSubmit(){
 		//print_r($_POST);
         $this->form_validation->set_rules('email', 'Email', 'required');
