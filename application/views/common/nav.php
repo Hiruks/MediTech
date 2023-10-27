@@ -53,9 +53,9 @@
                     </a>
                 </li>
                 <li class="profile-dropdown-list-item">
-                    <a href="#">
+                    <a href="<?php echo site_url(); ?>/login/editProfile">
                         <i class="fa-solid fa-cog"></i>
-                        <span>Settings</span>
+                        <span>Edit User</span>
                     </a>
                 </li>
                 <li class="profile-dropdown-list-item">

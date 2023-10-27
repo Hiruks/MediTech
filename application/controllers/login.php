@@ -43,6 +43,60 @@ class Login extends CI_Controller {
         }
         
     }
+
+    public function editProfile(){
+        $success = $this->session->flashdata('success');
+		$error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        $sessionData = $this->session->userdata('userinfo');
+        if($this->checkSessionExist()){
+
+            $result = $this->user_model->getUserDataByID($sessionData['id']);
+            if($result){
+                $data['myprofile'] = $result;
+                $this->load->view('edit-profile',$data);
+            }
+            
+        }
+    }
+
+    public function editProfileSubmit(){
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('contact', 'Contact', 'required');
+        if ($this->form_validation->run() == FALSE){
+            $this->session->set_flashdata('error','Form details cannot be empty');
+            redirect("/login/editProfile/");
+        }else{
+            //print_r($_POST);
+            $sessionData = $this->session->userdata('userinfo');
+            $data = array(
+                'id'=>$sessionData['id'],
+                'name'=>$_POST['name'],
+                'email'=> $_POST['email'],
+                'contact' => $_POST['contact']
+             );
+             $result = $this->user_model->updateProfile($data);
+             if($result == 1){
+                $this->session->set_flashdata('success','Profile data updated successfully.');
+                redirect("/login/profile/");
+             }elseif($result == 0){
+                $this->session->set_flashdata('success','Profile data upto date.');
+                redirect("/login/profile/");
+             }else{
+                $this->session->set_flashdata('error','Error occured please try again');
+                redirect("/login/editProfile/");
+             }
+
+        }
+    }
+    
 	public function loginSubmit(){
 		//print_r($_POST);
         $this->form_validation->set_rules('email', 'Email', 'required');
@@ -71,15 +125,14 @@ class Login extends CI_Controller {
                                         'product'=>true,
                                         'reports'=>true
                             ],
-                        'profile'=>['view'=>true,
-                                    'edit'=>true,
+                        'user-management'=>['view'=>true,
+                                   'edit'=>true,
                                     'delete'=>true
                         ],
-                        'teamprofile'=>['view'=>true,
-                                    'edit'=>true,
-                                    'delete'=>true
+                        'blacklist'=>['view'=>true,
+                                    
                         ],
-                        'product'=>['view'=>true,
+                        'orders'=>['view'=>true,
                                     'edit'=>true,
                                     'delete'=>true
                                     ],
@@ -94,50 +147,50 @@ class Login extends CI_Controller {
                         'dashboard'=>['myprofile'=>true,
                                         'teamprofile'=>true,
                                         'product'=>true,
-                                        'reports'=>false
+                                        'reports'=>true
                             ],
-                        'profile'=>['view'=>true,
+                        'user-management'=>['view'=>true,
                                     'edit'=>true,
-                                    'delete'=>false
-                                    ],
-                        'teamprofile'=>['view'=>true,
-                                    'edit'=>false,
-                                    'delete'=>false
-                                    ],
-                        'product'=>['view'=>true,
+                                    'delete'=>true
+                        ],
+                        'blacklist'=>['view'=>true,
+                                    
+                        ],
+                        'orders'=>['view'=>true,
                                     'edit'=>true,
-                                    'delete'=>false
+                                    'delete'=>true
                                     ],
-                        'reports'=>['view'=>false,
-                                    'edit'=>false,
-                                    'delete'=>false
+                        'reports'=>['view'=>true,
+                                    'edit'=>true,
+                                    'delete'=>true
                                     ],
+
                     );
                 }
 			    elseif($resutlUserData[0]->userType == 'DataEntry'){
-				$actions = array(
-					'dashboard'=>['myprofile'=>true,
-									'teamprofile'=>true,
-									'product'=>true,
-									'reports'=>false
-						],
-					'profile'=>['view'=>true,
-								'edit'=>true,
-								'delete'=>false
-								],
-					'teamprofile'=>['view'=>true,
-								'edit'=>false,
-								'delete'=>false
-								],
-					'product'=>['view'=>true,
-								'edit'=>true,
-								'delete'=>false
-								],
-					'reports'=>['view'=>false,
-								'edit'=>false,
-								'delete'=>false
-								],
-				);
+                    $actions = array(
+                        'dashboard'=>['myprofile'=>true,
+                                        'teamprofile'=>true,
+                                        'product'=>true,
+                                        'reports'=>true
+                            ],
+                        'user-management'=>['view'=>true,
+                                    'edit'=>true,
+                                    'delete'=>true
+                        ],
+                        'blacklist'=>['view'=>true,
+                                    
+                        ],
+                        'orders'=>['view'=>true,
+                                    'edit'=>true,
+                                    'delete'=>true
+                                    ],
+                        'reports'=>['view'=>true,
+                                    'edit'=>true,
+                                    'delete'=>true
+                                    ],
+
+                    );
                 }
                 
                 // update session object with new session data
@@ -215,5 +268,3 @@ class Login extends CI_Controller {
     }
 
 }
-
-?>
