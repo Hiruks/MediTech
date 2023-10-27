@@ -1,16 +1,5 @@
 <div class="col-2 sidebarcont">
 <aside>
-    <div class="togglee">
-        <div class="logoo">
-            <img src="<?php echo site_url(); ?>images/logo-transparent.png">
-            <h2>Medi<span class="dangerr">Tech.</span></h2>
-        </div>
-        <div class="closee" id="close-btn">
-            <span class="material-symbols-sharp">
-                close
-            </span>
-        </div>
-    </div>
 
     <div class="sidebarr">
         <a href="#" class="list-unstyled">

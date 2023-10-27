@@ -14,28 +14,32 @@
 </head>
 
 <body>
-    <div class="container-fluid px-6">     
-    <div class="row">
-    <?php $this->load->view('/common/sidebar.php'); ?>
-
-        <div class="dashboard-content col-10">
-            
-        <h1>hellooo</h1>
-        <?php 
-                    if(isset($success)){
-                        echo "<div class='alert alert-success'>";
-                        echo $success;
-                        echo "</div>";
-                    }
-                    if(isset($error)){
-                        echo "<div class='alert alert-danger'>";
-                        echo $error;
-                        echo "</div>";
-                    }
-                    
-                ?> 
+    <div class="container-fluid px-6">
+        <div class="row">
+            <?php $this->load->view('/common/nav.php'); ?>
         </div>
-    </div>     
+        <div class="row">
+            <?php $this->load->view('/common/sidebar.php'); ?>
+
+            <div class="dashboard-content col-10">
+
+                <?php
+                if (isset($success)) {
+                    echo "<div class='alert alert-success'>";
+                    echo $success;
+                    echo "</div>";
+                }
+                if (isset($error)) {
+                    echo "<div class='alert alert-danger'>";
+                    echo $error;
+                    echo "</div>";
+                }
+                ?>
+
+                    <!-- Dyanmic page code goes here -->
+
+            </div>
+        </div>
     </div>
 </body>
 

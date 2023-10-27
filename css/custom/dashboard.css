@@ -106,40 +106,20 @@ p{
 }
 
 aside{
-    height: 100vh;
+    height: 90vh; 
 }
 
-aside .togglee{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.4rem;
-}
 
-aside .togglee .logoo{
-    display: flex;
-    gap: 0.5rem;
-}
-
-aside .togglee .logoo img{
-    width: 2rem;
-    height: 2rem;
-}
-
-aside .togglee .closee{
-    padding-right: 1rem;
-    display: none;
-}
 
 aside .sidebarr{
+    height: 90vh;
     display: flex;
     flex-direction: column;
     background-color: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 15px;
-    height: 88vh;
     position: relative;
-    top: 1.5rem;
+    
     transition: all 0.3s ease;
 }
 
@@ -154,13 +134,16 @@ aside .sidebarr a{
     height: 3.7rem;
     gap: 1rem;
     position: relative;
-    margin-left: 2rem;
     transition: all 0.3s ease;
 }
 
 aside .sidebarr a span{
     font-size: 1.6rem;
     transition: all 0.3s ease;
+}
+
+aside .sidebarr a:first-child{
+    margin-top: 2rem;
 }
 
 aside .sidebarr a:last-child{
@@ -196,17 +179,39 @@ aside .sidebarr a:hover span{
     margin-left: 0.6rem;
 }
 
-@media screen and (min-width: 1200x) {
-    aside .logoo h2{
-        display: none;
-    }
+@media screen and (max-width: 1200px) {
 
     aside .sidebarr h3{
         display: none;
     }
 
+    .sidebarr a:first-child{
+        margin-top: 2rem;
+    }
+
+    .sidebarr a{
+        flex-direction: column;
+        margin-left: none;
+
+    }
+
+    .sidebarr a span{
+        align-self: center;
+        width: max-content;
+        margin-right: 0px;
+    }
+
+    
     aside .sidebarr a:last-child{
         position: relative;
         margin-top: 1.8rem;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .sidebarr a{
+        flex-direction: row;
+        margin-left: 2rem;
+
     }
 }
