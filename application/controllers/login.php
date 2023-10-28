@@ -129,7 +129,6 @@ class Login extends CI_Controller
                             'reports' => true
                         ],
                         'customers' => [
-                            'view' => true,
                             'edit' => true,
                             'delete' => true
                         ],
@@ -168,9 +167,8 @@ class Login extends CI_Controller
                             'reports' => true
                         ],
                         'customers' => [
-                            'view' => true,
                             'edit' => true,
-                            'delete' => true
+                            'delete' => false
                         ],
                         /*
                         'user-management' => [
@@ -205,9 +203,8 @@ class Login extends CI_Controller
                             'reports' => true
                         ],
                         'customers' => [
-                            'view' => true,
-                            'edit' => true,
-                            'delete' => true
+                            'edit' => false,
+                            'delete' => false
                         ],
                         'user-management' => [
                             'view' => true,
@@ -296,6 +293,104 @@ class Login extends CI_Controller
                 $this->load->view('dashboard', $data);
             } else {
                 $this->load->view('auth/login', $data);
+            }
+        }
+    }
+//fetchCustomerDB();
+    public function customerMng(){
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if (isset($data['error']) || isset($data['success'])) {
+            $this->load->view('customer-management', $data);
+        } else {
+           
+            if ($this->checkSessionExist()) {
+                
+                $result = $this->user_model->fetchCustomerDB();
+                
+                if ($result) {
+                    $data['customer'] = $result;
+                    $this->load->view('customer-management', $data);
+                }
+
+            } else {
+                $this->load->view('auth/login', $data);
+            }
+        }
+    }
+
+    public function addcustomer(){
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if (isset($data['error']) || isset($data['success'])) {
+            $result = $this->user_model->fetchCustomerDB();
+                
+                if ($result) {
+                    $data['customer'] = $result;
+                    $this->load->view('customer-management', $data);
+                }
+        } else {
+           
+            if ($this->checkSessionExist()) {
+
+                $result = $this->user_model->fetchCustomerDB();
+                
+                if ($result) {
+                    $data['customer'] = $result;
+                    $this->load->view('add-customer-management', $data);
+                }
+
+            } else {
+                $this->load->view('auth/login', $data);
+            }
+        }
+    }
+
+    public function addCustomerSubmit(){
+        //loading stuff here
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('contact', 'Contact', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', 'Form details cannot be empty');
+            redirect("/login/addcustomer/");
+        } else {
+            //print_r($_POST);
+
+            $data = array(
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'contactNo' => $_POST['contact']
+            );
+
+            $result = $this->user_model->addCustomer($data);
+
+            if ($result == 1) {
+                $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
+                redirect('/login/addCustomer');
+            
+            } elseif ($result == 0) {
+                $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
+                redirect('/login/addCustomer');
+
+            
+            } else {
+                $this->session->set_flashdata('error', 'Error occured please try again');
+                redirect("/login/addCustomer");
             }
         }
     }

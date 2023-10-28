@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo site_url(); ?>css/custom/nav.css">
+    <link href="<?php echo site_url(); ?>css/custom/public-dashboard.css" rel="stylesheet" />
+
 
     <title>Dashboard ~ MediTech</title>
 </head>
@@ -26,8 +28,18 @@
             <div class="dashboard-content col-10">
 
                 <div class="dynamic-page container m-2">
+                
+                <!--   
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">User Profile</h1>
+
+
+                <div class="container">
+                        <div class="row">
+                        <div class="col mt-4 innercont p-5 me-4"> 
+                -->
                     
                     <?php
+
                     if (isset($success)) {
                         echo "<div class='alert alert-success' style='z-index: -1;'>";
                         echo $success;

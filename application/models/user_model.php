@@ -1,7 +1,36 @@
 <?php 
 
 class User_model extends CI_Model{
+
+    public function fetchCustomerDB(){
+        
+        $query = $this->db->query("SELECT * FROM `customers`");
     
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function addCustomer($data){
+        
+        $this->db->set('email', $data['email']);
+        $this->db->set('name', $data['name']);
+        $this->db->set('contactNo', $data['contactNo']);
+
+        $query = $this->db->insert('customers');
+
+        if($this->db->affected_rows() == 1){
+            return(1);
+        }else if($this->db->affected_rows() == 0){
+            return(0);
+        }else{
+            return(-1);
+        }
+        
+    }
+
     public function loginCheck($data){
         $this->db->where('email',$data['email']);
         $this->db->where('password',$data['password']);

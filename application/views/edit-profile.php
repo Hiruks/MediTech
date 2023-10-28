@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo site_url(); ?>css/custom/nav.css">
+    <link href="<?php echo site_url(); ?>css/custom/public-dashboard.css" rel="stylesheet" />
+
 
     <title>Dashboard ~ MediTech</title>
 </head>
@@ -31,7 +33,7 @@
 
                     <div class="container">
                         <div class="row">
-                            <div class="col mt-4">
+                            <div class="col mt-4 innercont p-5 me-4">
                                 
                                 <?php
                                 if (isset($success)) {

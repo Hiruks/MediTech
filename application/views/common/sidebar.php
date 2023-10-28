@@ -15,7 +15,7 @@
 
                 <!-- Customers -->
 
-                <a href="#" class="list-unstyled">
+                <a href="<?php echo site_url(); ?>/login/customerMng" class="list-unstyled">
                     <span class="material-symbols-rounded">
                         group
                     </span>
