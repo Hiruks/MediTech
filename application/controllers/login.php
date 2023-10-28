@@ -296,8 +296,9 @@ class Login extends CI_Controller
             }
         }
     }
-//fetchCustomerDB();
-    public function customerMng(){
+    //fetchCustomerDB();
+    public function customerMng()
+    {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
         $data = [];
@@ -310,23 +311,23 @@ class Login extends CI_Controller
         if (isset($data['error']) || isset($data['success'])) {
             $this->load->view('customer-management', $data);
         } else {
-           
+
             if ($this->checkSessionExist()) {
-                
+
                 $result = $this->user_model->fetchCustomerDB();
-                
+
                 if ($result) {
                     $data['customer'] = $result;
                     $this->load->view('customer-management', $data);
                 }
-
             } else {
                 $this->load->view('auth/login', $data);
             }
         }
     }
 
-    public function addcustomer(){
+    public function addcustomer()
+    {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
         $data = [];
@@ -338,29 +339,29 @@ class Login extends CI_Controller
         }
         if (isset($data['error']) || isset($data['success'])) {
             $result = $this->user_model->fetchCustomerDB();
-                
-                if ($result) {
-                    $data['customer'] = $result;
-                    $this->load->view('customer-management', $data);
-                }
+
+            if ($result) {
+                $data['customer'] = $result;
+                $this->load->view('customer-management', $data);
+            }
         } else {
-           
+
             if ($this->checkSessionExist()) {
 
                 $result = $this->user_model->fetchCustomerDB();
-                
+
                 if ($result) {
                     $data['customer'] = $result;
                     $this->load->view('add-customer-management', $data);
                 }
-
             } else {
                 $this->load->view('auth/login', $data);
             }
         }
     }
 
-    public function addCustomerSubmit(){
+    public function addCustomerSubmit()
+    {
         //loading stuff here
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('name', 'Name', 'required');
@@ -382,17 +383,49 @@ class Login extends CI_Controller
             if ($result == 1) {
                 $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
                 redirect('/login/addCustomer');
-            
             } elseif ($result == 0) {
                 $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
                 redirect('/login/addCustomer');
-
-            
             } else {
                 $this->session->set_flashdata('error', 'Error occured please try again');
                 redirect("/login/addCustomer");
             }
         }
+    }
+
+    public function editCustomer($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchCustomerDB();
+            $customerFP = $this->user_model->getCustomerDataByID($id);
+            print_r($customerFP);
+            
+            if ($result && $customerFP) {
+                
+                $data['customer'] = $result;
+                $data['table'] = $customerFP;
+
+            
+                $this->load->view('edit-customer-management', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function editCustomerSubmit(){
+
     }
 
     private function checkSessionExist()

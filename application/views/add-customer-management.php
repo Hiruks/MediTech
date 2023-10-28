@@ -120,8 +120,8 @@
 
                                                 <td>
                                                     <div class="flex">
-                                                        <a href="" class="btn btn-success btn-sm">Edit</a>
-                                                        <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                                    <a href="<?php echo site_url(); ?>login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
+                                                        <a href="<?php echo site_url(); ?>login/delCustomer/<?php echo $row->custID; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                     </div>
 
 

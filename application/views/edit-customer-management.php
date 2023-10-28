@@ -31,32 +31,65 @@
 
 
                     <h1 style="font-weight: 800; font-size: 2.5rem;">Customer Management</h1>
-                    <?php
 
-                    if (isset($success)) {
-                        echo "<div class='alert alert-success' style='z-index: -1;'>";
-                        echo $success;
-                        echo "</div>";
-                    }
-                    if (isset($error)) {
-                        echo "<div class='alert alert-danger' style='z-index: -1;'>";
-                        echo $error;
-                        echo "</div>";
-                    }
-                    ?>
 
                     <div class="container">
                         <div class="row">
+
+
                             <div class=" mt-4 innercont p-5 me-4">
+                                <?php
 
+                                if (isset($success)) {
+                                    echo "<div class='alert alert-success'>";
+                                    echo $success;
+                                    echo "</div>";
+                                }
+                                if (isset($error)) {
+                                    echo "<div class='alert alert-danger'>";
+                                    echo $error;
+                                    echo "</div>";
+                                }
+                                ?>
 
+                                <!-- customer addition card -->
+                                <?php echo form_open('login/editCustomerSubmit') ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label>Name</label>
+                                            <input type="text" name="name" value="<?php echo $table['name'];?>" class="form-control" placeholder="Enter customer name">
+                                        </div>
+                                    </div>
 
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label>Email</label>
+                                            <input type="text" name="email" value="<?php echo $table['email'];?>" class="form-control" placeholder="Enter customer email address">
+                                        </div>
+                                    </div>
 
-                                <div class="d-flex mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-4">
+                                            <label>Contact Number</label>
+                                            <input type="text" name="contact" value="<?php echo $table['contactNo'];?>" class="form-control" placeholder="Enter customer contact number">
+                                        </div>
+                                    </div>
 
-                                    <a href="<?php echo site_url(); ?>/login/addcustomer" class="btn btn-primary">Add customers</a>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="submit" class="btn btn-primary px-4" value="Update Customer"></input>
+                                        </div>
+                                    </div>
 
                                 </div>
+                                <?php echo form_close(); ?>
+                            </div>
+
+
+
+
+                            <div class=" mt-4 innercont p-5 me-4">
 
                                 <!-- table view -->
 
@@ -87,9 +120,8 @@
 
                                                 <td>
                                                     <div class="flex">
-                                                        <a href="<?php echo form_close(); ?>/login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
+                                                    <a href="<?php echo form_close(); ?>/login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
                                                         <a href="<?php echo form_close(); ?>/login/delCustomer/<?php echo $row->custID; ?>" class="btn btn-danger btn-sm">Delete</a>
-                                              
                                                     </div>
 
 
@@ -105,13 +137,15 @@
 
 
                             </div>
-
-
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 

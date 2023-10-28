@@ -12,6 +12,19 @@ class User_model extends CI_Model{
             return false;
         }
     }
+    public function getCustomerDataByID($id){
+        $condition = "custID='{$id}'";
+        $query = $this->db->select('*')
+                        ->where($condition)
+                        ->get('customers');
+        
+        return $query->result();
+        if($query->num_rows() == 1){
+            return $query->result();
+        }else{
+            return false;
+        }
+    }
 
     public function addCustomer($data){
         
