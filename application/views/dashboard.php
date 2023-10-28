@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo site_url(); ?>css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link href="<?php echo site_url(); ?>css/custom/dashboard.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo site_url(); ?>css/custom/nav.css">
 
@@ -29,12 +29,12 @@
                     
                     <?php
                     if (isset($success)) {
-                        echo "<div class='alert alert-success'>";
+                        echo "<div class='alert alert-success' style='z-index: -1;'>";
                         echo $success;
                         echo "</div>";
                     }
                     if (isset($error)) {
-                        echo "<div class='alert alert-danger'>";
+                        echo "<div class='alert alert-danger' style='z-index: -1;'>";
                         echo $error;
                         echo "</div>";
                     }
