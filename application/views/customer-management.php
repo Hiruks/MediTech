@@ -82,13 +82,18 @@
                                                 <td><?php echo $row->name; ?></td>
                                                 <td><?php echo $row->email; ?></td>
                                                 <td><?php echo $row->contactNo; ?></td>
-                                                <td><?php echo $row->status; ?></td>
+                                                <td <?php if ($row->status == "blacklisted") {
+                                                    echo "class='text-danger'";}else{
+                                                        
+                                                        echo "class='text-success'";}?>>
+                                                    <?php echo $row->status; ?>
+                                                </td>
                                                 <td><?php echo $row->registered_date; ?></td>
 
                                                 <td>
                                                     <div class="flex">
-                                                        <a href="" class="btn btn-success btn-sm">Edit</a>
-                                                        <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                                    <a href="<?php echo site_url(); ?>login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
+                                                        <a href="<?php echo site_url(); ?>login/delCustomer/<?php echo $row->custID; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                     </div>
 
 

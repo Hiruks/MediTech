@@ -53,32 +53,32 @@
                                 ?>
 
                                 <!-- customer addition card -->
-                                <?php echo form_open('login/addCustomerSubmit') ?>
+                                <?php echo form_open('login/editCustomerSubmit/' . $table[0]->custID); ?>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Name</label>
-                                            <input type="text" name="name" class="form-control" placeholder="Enter customer name">
+                                            <input type="text" name="name" value="<?php echo $table[0]->name; ?>" class="form-control" placeholder="Enter customer name">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Email</label>
-                                            <input type="text" name="email" class="form-control" placeholder="Enter customer email address">
+                                            <input type="text" name="email" value="<?php echo $table[0]->email; ?>" class="form-control" placeholder="Enter customer email address">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="form-group mb-4">
                                             <label>Contact Number</label>
-                                            <input type="text" name="contact" class="form-control" placeholder="Enter customer contact number">
+                                            <input type="text" name="contact" value="<?php echo $table[0]->contactNo; ?>" class="form-control" placeholder="Enter customer contact number">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input type="submit" class="btn btn-primary px-4" value="Add Customer"></input>
+                                            <input type="submit" class="btn btn-primary px-4" value="Update Customer"></input>
                                         </div>
                                     </div>
 
