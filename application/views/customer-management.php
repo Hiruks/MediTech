@@ -82,7 +82,12 @@
                                                 <td><?php echo $row->name; ?></td>
                                                 <td><?php echo $row->email; ?></td>
                                                 <td><?php echo $row->contactNo; ?></td>
-                                                <td><?php echo $row->status; ?></td>
+                                                <td <?php if ($row->status == "blacklisted") {
+                                                    echo "class='text-danger'";}else{
+                                                        
+                                                        echo "class='text-success'";}?>>
+                                                    <?php echo $row->status; ?>
+                                                </td>
                                                 <td><?php echo $row->registered_date; ?></td>
 
                                                 <td>

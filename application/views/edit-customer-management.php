@@ -53,26 +53,26 @@
                                 ?>
 
                                 <!-- customer addition card -->
-                                <?php echo form_open('login/editCustomerSubmit/'.$table[0]->custID); ?>
+                                <?php echo form_open('login/editCustomerSubmit/' . $table[0]->custID); ?>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Name</label>
-                                            <input type="text" name="name" value="<?php echo $table[0]->name;?>" class="form-control" placeholder="Enter customer name">
+                                            <input type="text" name="name" value="<?php echo $table[0]->name; ?>" class="form-control" placeholder="Enter customer name">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Email</label>
-                                            <input type="text" name="email" value="<?php echo $table[0]->email;?>" class="form-control" placeholder="Enter customer email address">
+                                            <input type="text" name="email" value="<?php echo $table[0]->email; ?>" class="form-control" placeholder="Enter customer email address">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="form-group mb-4">
                                             <label>Contact Number</label>
-                                            <input type="text" name="contact" value="<?php echo $table[0]->contactNo;?>" class="form-control" placeholder="Enter customer contact number">
+                                            <input type="text" name="contact" value="<?php echo $table[0]->contactNo; ?>" class="form-control" placeholder="Enter customer contact number">
                                         </div>
                                     </div>
 
@@ -115,13 +115,18 @@
                                                 <td><?php echo $row->name; ?></td>
                                                 <td><?php echo $row->email; ?></td>
                                                 <td><?php echo $row->contactNo; ?></td>
-                                                <td><?php echo $row->status; ?></td>
+                                                <td <?php if ($row->status == "blacklisted") {
+                                                    echo "class='text-danger'";}else{
+                                                        
+                                                        echo "class='text-success'";}?>>
+                                                    <?php echo $row->status; ?>
+                                                </td>
                                                 <td><?php echo $row->registered_date; ?></td>
 
                                                 <td>
                                                     <div class="flex">
-                                                    <a href="<?php echo form_close(); ?>/login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
-                                                        <a href="<?php echo form_close(); ?>/login/delCustomer/<?php echo $row->custID; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                    <a href="<?php echo site_url(); ?>login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
+                                                        <a href="<?php echo site_url(); ?>login/delCustomer/<?php echo $row->custID; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                     </div>
 
 
