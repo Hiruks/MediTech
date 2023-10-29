@@ -26,6 +26,18 @@ class User_model extends CI_Model{
         }
     }
 
+    public function editCustomerData($id, $customer){
+        $sql = "UPDATE `customers` SET `name` = \'$customer[name]\', `email` = \'$customer[email]\', `contactNo` = \'$customer[contactNo]\' WHERE `customers`.`custID` = $id";
+
+        if($this->db->affected_rows() == 1){
+            return(1);
+        }else if($this->db->affected_rows() == 0){
+            return(0);
+        }else{
+            return(-1);
+        }
+    }
+
     public function addCustomer($data){
         
         $this->db->set('email', $data['email']);

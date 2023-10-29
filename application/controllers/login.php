@@ -409,14 +409,12 @@ class Login extends CI_Controller
 
             $result = $this->user_model->fetchCustomerDB();
             $customerFP = $this->user_model->getCustomerDataByID($id);
-            print_r($customerFP);
             
             if ($result && $customerFP) {
                 
                 $data['customer'] = $result;
                 $data['table'] = $customerFP;
 
-            
                 $this->load->view('edit-customer-management', $data);
             }
         } else {
@@ -424,8 +422,49 @@ class Login extends CI_Controller
         }
     }
 
-    public function editCustomerSubmit(){
+    public function editCustomerSubmit($id){
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
 
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchCustomerDB();
+            $customerFP = $this->user_model->getCustomerDataByID($id);
+            
+            if ($result && $customerFP) {
+                
+                //$data['customer'] = $result;
+
+                $data = array(
+                    'custID' => $id,
+                    'name' => $_POST['name'],
+                    'email' => $_POST['email'],
+                    'contactNo' => $_POST['contact']
+                );
+
+                $result = $this->user_model->editCustomerData($id, $data);
+
+                if ($result == 1) {
+                    $data['success'] = $this->session->set_flashdata('success', 'Customer edited successfully');
+                    redirect('/login/customerMng');
+                } elseif ($result == 0) {
+                    $data['success'] = $this->session->set_flashdata('error', 'No edits were made.');
+                    redirect('/login/customerMng');
+                } else {
+                    $this->session->set_flashdata('error', 'Error occured please try again');
+                    redirect("/login/customerMng");
+                }
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
     }
 
     private function checkSessionExist()
