@@ -314,7 +314,7 @@ class Login extends CI_Controller
 
             if ($result) {
                 $data['customer'] = $result;
-                $this->load->view('customer-management', $data);
+                $this->load->view('customer-management/customer-management', $data);
             }
         } else {
             $this->load->view('auth/login', $data);
@@ -337,7 +337,7 @@ class Login extends CI_Controller
 
             if ($result) {
                 $data['customer'] = $result;
-                $this->load->view('customer-management', $data);
+                $this->load->view('customer-management/customer-management', $data);
             }
         } else {
 
@@ -347,7 +347,7 @@ class Login extends CI_Controller
 
                 if ($result) {
                     $data['customer'] = $result;
-                    $this->load->view('add-customer-management', $data);
+                    $this->load->view('customer-management/add-customer-management', $data);
                 }
             } else {
                 $this->load->view('auth/login', $data);
@@ -410,7 +410,7 @@ class Login extends CI_Controller
                 $data['customer'] = $result;
                 $data['table'] = $customerFP;
 
-                $this->load->view('edit-customer-management', $data);
+                $this->load->view('customer-management/edit-customer-management', $data);
             }
         } else {
             $this->load->view('auth/login', $data);
