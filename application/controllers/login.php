@@ -10,6 +10,11 @@ class Login extends CI_Controller
         $this->load->library('form_validation');
         $this->load->model('user_model');
         $this->load->library('session');
+        $this->load->helper('url');
+
+        date_default_timezone_set("Asia/colombo");
+
+        $this->load->library('upload');
     }
 
     public function index()
@@ -484,11 +489,255 @@ class Login extends CI_Controller
                 $data['success'] = $this->session->set_flashdata('error', 'Error, the record was not deleted.');
                 redirect("/login/customerMng");
             }
-
         } else {
             $this->load->view('auth/login', $data);
         }
     }
+
+    public function products()
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchProducts();
+            if ($result==null) {
+                $data['product'] = null;
+                $this->load->view('products/add-product', $data);
+            }
+            if ($result) {
+                $data['product'] = $result;
+                $this->load->view('products/products', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function addProduct()
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if (isset($data['error']) || isset($data['success'])) {
+            $result = $this->user_model->fetchProducts();
+
+            if ($result) {
+                $data['product'] = $result;
+                $this->load->view('products/products', $data);
+            }
+        } else {
+
+            if ($this->checkSessionExist()) {
+
+                $result = $this->user_model->fetchProducts();
+
+                if ($result) {
+                    $data['product'] = $result;
+                    $this->load->view('products/add-product', $data);
+                }
+            } else {
+                $this->load->view('auth/login', $data);
+            }
+        }
+    }
+
+    public function addProductSubmit()
+    {
+        //loading stuff here
+        $this->form_validation->set_rules('title', 'Title', 'required');
+        $this->form_validation->set_rules('description', 'Description', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', 'Form details cannot be empty');
+            redirect("login/addProduct/");
+        } else {
+            //print_r($_POST
+            // print_r($_POST);
+            $file_extension = pathinfo($_FILES["userfile"]["name"], PATHINFO_EXTENSION);
+
+            // Generate a unique file name
+            $new_name = time() . '_' . mt_rand(100000, 999999) . '.' . $file_extension;
+
+            $config = array(
+                'upload_path' => 'uploads/images/',
+                'allowed_types' => "gif|jpg|png|jpeg|pdf",
+                'overwrite' => TRUE,
+                'max_size' => "2048000",
+                // 'max_height' => "768",
+                // 'max_width' => "1024",
+                'file_name' => $new_name
+            );
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+            if ($this->upload->do_upload()) {
+                $data = array('upload_data' => $this->upload->data());
+
+                $data = array(
+                    'title' => $_POST['title'],
+                    'description' => $_POST['description'],
+                    'img' => $new_name
+                );
+
+                $result = $this->user_model->addProduct($data);
+
+                if ($result == 1) {
+                    $data['success'] = $this->session->set_flashdata('success', 'Product added successfully.');
+                    redirect('login/products');
+                } elseif ($result == 0) {
+                    $data['error'] = $this->session->set_flashdata('success', 'No products were added.');
+                    redirect('login/products');
+                } else {
+                    $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
+                    redirect('login/products');
+                }
+            } else {
+                /*$error = array('error' => $this->upload->display_errors());
+                print_r($error); */
+                $error = $this->upload->display_errors();
+                $data['error'] = $this->session->set_flashdata('error', $error);
+                redirect('login/products');
+                //$this->load->view('custom_view', $error);
+            }
+        }
+    }
+
+    public function editProduct($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchProducts();
+            $productsFP = $this->user_model->getProductByID($id);
+
+            if ($result && $productsFP) {
+
+                $data['product'] = $result;
+                $data['info'] = $productsFP;
+
+                $this->load->view('products/edit-products', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function editProductSubmit($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchProducts();
+            $productFP = $this->user_model->getProductByID($id);
+
+            $file_extension = pathinfo($_FILES["userfile"]["name"], PATHINFO_EXTENSION);
+
+            // Generate a unique file name
+            $new_name = time() . '_' . mt_rand(100000, 999999) . '.' . $file_extension;
+
+            $config = array(
+                'upload_path' => 'uploads/images/',
+                'allowed_types' => "gif|jpg|png|jpeg|pdf",
+                'overwrite' => TRUE,
+                'max_size' => "2048000",
+                // 'max_height' => "768",
+                // 'max_width' => "1024",
+                'file_name' => $new_name
+            );
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+            if ($this->upload->do_upload()) {
+                $data = array('upload_data' => $this->upload->data());
+
+                $data = array(
+                    'title' => $_POST['title'],
+                    'description' => $_POST['description'],
+                    'img' => $new_name
+                );
+
+                $result = $this->user_model->editProductData($id, $data);
+
+                if ($result == 1) {
+                    $data['success'] = $this->session->set_flashdata('success', 'Product edited successfully.');
+                    redirect('login/products');
+                } elseif ($result == 0) {
+                    $data['error'] = $this->session->set_flashdata('error', 'No edits were made.');
+                    redirect('login/products');
+                } else {
+                    $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
+                    redirect('login/products');
+                }
+            } else {
+                $error = array('error' => $this->upload->display_errors());
+                print_r($error);
+                /*$error = print_r($this->upload->display_errors());
+                $data['error'] = $this->session->set_flashdata('error', $error);
+                redirect('login/products');*/
+                //$this->load->view('custom_view', $error);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function delProduct($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->delProduct($id);
+            if ($result) {
+                $data['success'] = $this->session->set_flashdata('success', 'Product deleted successfully.');
+                redirect('login/products');
+            } else {
+                $data['success'] = $this->session->set_flashdata('error', 'Error, the record was not deleted.');
+                redirect("/login/products");
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
 
     private function checkSessionExist()
     {
@@ -504,6 +753,7 @@ class Login extends CI_Controller
     {
         $this->session->unset_userdata('userinfo');
         $this->session->set_flashdata('success', 'Logout successful.');
+
         redirect('login/userlogin');
     }
 }

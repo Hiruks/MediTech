@@ -67,7 +67,7 @@
 
                 <!-- Products -->
 
-                <a href="#" class="list-unstyled">
+                <a href="<?php echo site_url(); ?>login/products" class="list-unstyled">
                     <span class="material-symbols-rounded">
                         inventory_2
                     </span>

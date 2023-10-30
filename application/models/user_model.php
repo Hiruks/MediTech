@@ -2,6 +2,17 @@
 
 class User_model extends CI_Model{
 
+    public function fetchProducts(){
+        
+        $query = $this->db->query("SELECT * FROM `products`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function fetchCustomerDB(){
         
         $query = $this->db->query("SELECT * FROM `customers`");
@@ -12,6 +23,40 @@ class User_model extends CI_Model{
             return false;
         }
     }
+
+    public function addProduct($data){
+        
+        $this->db->set('title', $data['title']);
+        $this->db->set('description', $data['description']);
+        $this->db->set('img', $data['img']);
+
+        $query = $this->db->insert('products');
+
+        if($this->db->affected_rows() == 1){
+            return(1);
+        }else if($this->db->affected_rows() == 0){
+            return(0);
+        }else{
+            return(-1);
+        }
+        
+    }
+
+    public function getProductByID($id){
+        $condition = "productID='{$id}'";
+        $query = $this->db->select('*')
+                        ->where($condition)
+                        ->get('products');
+        
+        return $query->result();
+        if($query->num_rows() == 1){
+            return $query->result();
+        }else{
+            return false;
+        }
+    }
+
+    
     public function getCustomerDataByID($id){
         $condition = "custID='{$id}'";
         $query = $this->db->select('*')
@@ -25,6 +70,39 @@ class User_model extends CI_Model{
             return false;
         }
     }
+
+    public function editProductData($id, $data){
+        
+        $condition ="productID='{$id}'";
+        //$this->db->set('userType', $data['userType']);
+        $this->db->set('title', $data['title']);
+        $this->db->set('description', $data['description']);
+        $this->db->set('img', $data['img']);
+
+        $this->db->where($condition);
+        $this->db->update('products');
+
+        if($this->db->affected_rows() == 1){
+            return(1);
+        }else if($this->db->affected_rows() == 0){
+            return(0);
+        }else{
+            return(-1);
+        }
+    }
+
+    public function delProduct($id){
+        //DELETE FROM customers WHERE `customers`.`custID` = 19
+        $condition = "productID='{$id}'";
+        $this->db->where($condition);
+        $this->db->delete('products');
+        if($this->db->affected_rows() == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     public function editCustomerData($id, $customer){
         

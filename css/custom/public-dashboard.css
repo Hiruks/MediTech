@@ -35,3 +35,14 @@
 .innercont:hover{
     box-shadow: none;
 }
+
+.prdimg{
+    height: 200px; /* Set the desired height */
+    width: auto; /* Allow the width to adjust to maintain aspect ratio */
+    max-width: 100%;
+}
+
+.prdrow{
+    height: 200px;
+
+}
