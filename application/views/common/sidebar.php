@@ -54,7 +54,7 @@
 
                 <!-- user management -->
 
-                <a href="#" class="list-unstyled">
+                <a href="<?php echo site_url(); ?>login/userMng" class="list-unstyled">
                     <span class="material-symbols-rounded">
                         engineering
                     </span>

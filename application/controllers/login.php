@@ -301,6 +301,214 @@ class Login extends CI_Controller
             }
         }
     }
+
+    //this is the stuff u need to change 👇
+    public function userMng()
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchUserDB();
+
+            if ($result) {
+                $data['user'] = $result;
+                $this->load->view('user-management/user-management', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function adduser()
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if (isset($data['error']) || isset($data['success'])) {
+            $result = $this->user_model->fetchUserDB();
+
+            if ($result) {
+                $data['user'] = $result;
+                $this->load->view('user-management/user-management', $data);
+            }
+        } else {
+
+            if ($this->checkSessionExist()) {
+
+                $result = $this->user_model->fetchUserDB();
+
+                if ($result) {
+                    $data['user'] = $result;
+                    $this->load->view('user-management/add-user-management', $data);
+                }
+            } else {
+                $this->load->view('auth/login', $data);
+            }
+        }
+    }
+
+    public function addUserSubmit()
+    {
+        //loading stuff here
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('contact', 'Contact', 'required');
+        $this->form_validation->set_rules('branch', 'Branch', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->form_validation->set_rules('type', 'Type', 'required');
+        
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', 'Form details cannot be empty');
+            redirect("/login/adduser/");
+        } else {
+            //print_r($_POST);
+
+            $data = array(
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'contactNo' => $_POST['contact'],
+                'branchID' => $_POST['branch'],
+                'password' => $_POST['password'],
+                'userType' => $_POST['type']
+            );
+
+            $result = $this->user_model->addUser($data);
+
+            if ($result == 1) {
+                $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
+                redirect('login/userMng');
+            } elseif ($result == 0) {
+                $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
+                redirect('login/userMng');
+            } else {
+                $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
+                redirect("login/addUser");
+            }
+        }
+    }
+
+    public function editUser($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchUserDB();
+            $customerFP = $this->user_model->getUserDataByID($id);
+
+            if ($result && $customerFP) {
+
+                $data['user'] = $result;
+                $data['table'] = $customerFP;
+
+                $this->load->view('user-management/edit-user-management', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function editUserSubmit($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchUserDB();
+            $customerFP = $this->user_model->getUserDataByID($id);
+
+            if ($result && $customerFP) {
+
+                //$data['customer'] = $result;
+
+                $data = array(
+                    'name' => $_POST['name'],
+                    'email' => $_POST['email'],
+                    'contactNo' => $_POST['contact'],
+                    'branchID' => $_POST['branch'],
+                    'password' => $_POST['password'],
+                    'userType' => $_POST['type'],
+                    'userid' => $id
+                );
+
+                $result = $this->user_model->editUserData($id, $data);
+
+                if ($result == 1) {
+                    $data['success'] = $this->session->set_flashdata('success', 'User edited successfully');
+                    redirect('login/userMng');
+                } elseif ($result == 0) {
+                    $data['success'] = $this->session->set_flashdata('error', 'No edits were made.');
+                    redirect('login/userMng');
+                } else {
+                    $this->session->set_flashdata('error', 'Error occured please try again');
+                    redirect("/login/userMng");
+                }
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+
+
+    public function delUser($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->delUser($id);
+            if ($result) {
+                $data['success'] = $this->session->set_flashdata('success', 'User deleted successfully.');
+                redirect('login/userMng');
+            } else {
+                $data['success'] = $this->session->set_flashdata('error', 'Error, the record was not deleted.');
+                redirect("/login/userMng");
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+    // bruhhhhhhhhhh
+
     //fetchCustomerDB();
     public function customerMng()
     {
@@ -493,6 +701,8 @@ class Login extends CI_Controller
             $this->load->view('auth/login', $data);
         }
     }
+
+    //this is the stuff u need to change 👆
 
     public function products()
     {

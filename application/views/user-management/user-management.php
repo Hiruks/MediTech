@@ -30,7 +30,7 @@
                 <div class="dynamic-page container m-2">
 
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Customer Management</h1>
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">User Management</h1>
                     <?php
 
                     if (isset($success)) {
@@ -54,7 +54,7 @@
 
                                 <div class="d-flex mb-3">
 
-                                    <a href="<?php echo site_url(); ?>/login/addcustomer" class="btn btn-primary">Add customer</a>
+                                    <a href="<?php echo site_url(); ?>/login/adduser" class="btn btn-primary">Add user</a>
 
                                 </div>
 
@@ -65,35 +65,32 @@
 
                                     <thead>
                                         <tr>
-                                            <th>Customer ID</th>
-                                            <th>Customer Name</th>
-                                            <th>Email</th>
+                                            <th>User ID</th>
+                                            <th>User Name</th>
+                                            <th>Branch ID</th>
                                             <th>Contact Number</th>
-                                            <th>Status</th>
+                                            <th>Email</th>
+                                            <th>User Type</th>
                                             <th>Registered Date</th>
                                         </tr>
                                     </thead>
 
                                     <body>
-                                        <?php foreach ($customer as $row) : ?>
+                                        <?php foreach ($user as $row) : ?>
 
                                             <tr>
-                                                <td><?php echo $row->custID; ?></td>
+                                                <td><?php echo $row->userid; ?></td>
                                                 <td><?php echo $row->name; ?></td>
-                                                <td><?php echo $row->email; ?></td>
+                                                <td><?php echo $row->branchID; ?></td>
                                                 <td><?php echo $row->contactNo; ?></td>
-                                                <td <?php if ($row->status == "blacklisted") {
-                                                    echo "class='text-danger'";}else{
-                                                        
-                                                        echo "class='text-success'";}?>>
-                                                    <?php echo $row->status; ?>
-                                                </td>
+                                                <td><?php echo $row->email; ?></td>
+                                                <td><?php echo $row->userType; ?></td>
                                                 <td><?php echo $row->registered_date; ?></td>
 
                                                 <td>
                                                     <div class="flex">
-                                                    <a href="<?php echo site_url(); ?>login/editCustomer/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Edit</a>
-                                                        <a href="<?php echo site_url(); ?>login/delCustomer/<?php echo $row->custID; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                    <a href="<?php echo site_url(); ?>login/editUser/<?php echo $row->userid; ?>" class="btn btn-success btn-sm">Edit</a>
+                                                        <a href="<?php echo site_url(); ?>login/delUser/<?php echo $row->userid; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                     </div>
 
 

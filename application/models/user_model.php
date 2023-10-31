@@ -239,6 +239,73 @@ class User_model extends CI_Model{
         }
     }
 
+    public function fetchUserDB(){
+        
+        $query = $this->db->query("SELECT * FROM `users`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function addUser($data){
+        
+        $this->db->set('email', $data['email']);
+        $this->db->set('name', $data['name']);
+        $this->db->set('contactNo', $data['contactNo']);
+        $this->db->set('branchID', $data['branchID']);
+        $this->db->set('password', $data['password']);
+        $this->db->set('userType', $data['userType']);
+
+        $query = $this->db->insert('users');
+
+        if($this->db->affected_rows() == 1){
+            return(1);
+        }else if($this->db->affected_rows() == 0){
+            return(0);
+        }else{
+            return(-1);
+        }
+        
+    }
+
+    public function editUserData($id, $data){
+        
+        $condition ="userid='{$id}'";
+        //$this->db->set('userType', $data['userType']);
+        $this->db->set('email', $data['email']);
+        $this->db->set('name', $data['name']);
+        $this->db->set('contactNo', $data['contactNo']);
+        $this->db->set('branchID', $data['branchID']);
+        $this->db->set('password', $data['password']);
+        $this->db->set('userType', $data['userType']);
+
+        $this->db->where($condition);
+        $this->db->update('users');
+
+        if($this->db->affected_rows() == 1){
+            return(1);
+        }else if($this->db->affected_rows() == 0){
+            return(0);
+        }else{
+            return(-1);
+        }
+    }
+
+    public function delUser($id){
+        //DELETE FROM customers WHERE `customers`.`custID` = 19
+        $condition = "userid='{$id}'";
+        $this->db->where($condition);
+        $this->db->delete('users');
+        if($this->db->affected_rows() == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }
 
 ?>
