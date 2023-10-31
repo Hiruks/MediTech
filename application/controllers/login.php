@@ -367,6 +367,11 @@ class Login extends CI_Controller
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('name', 'Name', 'required');
         $this->form_validation->set_rules('contact', 'Contact', 'required');
+        $this->form_validation->set_rules('branch', 'Branch', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->form_validation->set_rules('type', 'Type', 'required');
+        
+
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('error', 'Form details cannot be empty');
             redirect("/login/adduser/");
@@ -376,17 +381,20 @@ class Login extends CI_Controller
             $data = array(
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
-                'contactNo' => $_POST['contact']
+                'contactNo' => $_POST['contact'],
+                'branchID' => $_POST['branch'],
+                'password' => $_POST['password'],
+                'userType' => $_POST['type']
             );
 
             $result = $this->user_model->addUser($data);
 
             if ($result == 1) {
-                $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
-                redirect('login/addUser');
+                $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
+                redirect('login/userMng');
             } elseif ($result == 0) {
-                $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
-                redirect('login/addUser');
+                $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
+                redirect('login/userMng');
             } else {
                 $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
                 redirect("login/addUser");
@@ -413,7 +421,7 @@ class Login extends CI_Controller
 
             if ($result && $customerFP) {
 
-                $data['customer'] = $result;
+                $data['user'] = $result;
                 $data['table'] = $customerFP;
 
                 $this->load->view('user-management/edit-user-management', $data);
@@ -445,16 +453,19 @@ class Login extends CI_Controller
                 //$data['customer'] = $result;
 
                 $data = array(
-                    'custID' => $id,
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
-                    'contactNo' => $_POST['contact']
+                    'contactNo' => $_POST['contact'],
+                    'branchID' => $_POST['branch'],
+                    'password' => $_POST['password'],
+                    'userType' => $_POST['type'],
+                    'userid' => $id
                 );
 
                 $result = $this->user_model->editUserData($id, $data);
 
                 if ($result == 1) {
-                    $data['success'] = $this->session->set_flashdata('success', 'Customer edited successfully');
+                    $data['success'] = $this->session->set_flashdata('success', 'User edited successfully');
                     redirect('login/userMng');
                 } elseif ($result == 0) {
                     $data['success'] = $this->session->set_flashdata('error', 'No edits were made.');
@@ -486,7 +497,7 @@ class Login extends CI_Controller
         if ($this->checkSessionExist()) {
             $result = $this->user_model->delUser($id);
             if ($result) {
-                $data['success'] = $this->session->set_flashdata('success', 'Record deleted successfully.');
+                $data['success'] = $this->session->set_flashdata('success', 'User deleted successfully.');
                 redirect('login/userMng');
             } else {
                 $data['success'] = $this->session->set_flashdata('error', 'Error, the record was not deleted.');

@@ -30,7 +30,7 @@
                 <div class="dynamic-page container m-2">
 
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Customer Management</h1>
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">User Management</h1>
                     <?php
 
                     if (isset($success)) {
@@ -54,7 +54,7 @@
 
                                 <div class="d-flex mb-3">
 
-                                    <a href="<?php echo site_url(); ?>/login/addcustomer" class="btn btn-primary">Add customers</a>
+                                    <a href="<?php echo site_url(); ?>/login/adduser" class="btn btn-primary">Add user</a>
 
                                 </div>
 
@@ -76,7 +76,7 @@
                                     </thead>
 
                                     <body>
-                                        <?php foreach ($customer as $row) : ?>
+                                        <?php foreach ($user as $row) : ?>
 
                                             <tr>
                                                 <td><?php echo $row->userid; ?></td>

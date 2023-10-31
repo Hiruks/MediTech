@@ -30,7 +30,7 @@
                 <div class="dynamic-page container m-2">
 
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Customer Management</h1>
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">User Management</h1>
 
 
                     <div class="container">
@@ -53,32 +53,53 @@
                                 ?>
 
                                 <!-- customer addition card -->
-                                <?php echo form_open('login/editCustomerSubmit/' . $table[0]->custID); ?>
+                                <?php echo form_open('login/editUserSubmit/' . $table[0]->userid); ?>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Name</label>
-                                            <input type="text" name="name" value="<?php echo $table[0]->name; ?>" class="form-control" placeholder="Enter customer name">
+                                            <input type="text" value="<?php echo $table[0]->name ?> " name="name" class="form-control" placeholder="Enter user name">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Email</label>
-                                            <input type="text" name="email" value="<?php echo $table[0]->email; ?>" class="form-control" placeholder="Enter customer email address">
+                                            <input type="text" value="<?php echo $table[0]->email ?>"name="email" class="form-control" placeholder="Enter user email address">
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Contact Number</label>
-                                            <input type="text" name="contact" value="<?php echo $table[0]->contactNo; ?>" class="form-control" placeholder="Enter customer contact number">
+                                            <input type="text" value="<?php echo $table[0]->contactNo ?>"name="contact" class="form-control" placeholder="Enter user contact number">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label>Branch ID</label>
+                                            <input type="text" value="<?php echo $table[0]->branchID ?>" name="branch" class="form-control" placeholder="Enter branch ID">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label>Password</label>
+                                            <input type="password" value="<?php echo $table[0]->password ?>" name="password" class="form-control" placeholder="Enter password">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label>User Type</label>
+                                            <input type="text" value="<?php echo $table[0]->userType?>" name="type" class="form-control" placeholder="Enter user type">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input type="submit" class="btn btn-primary px-4" value="Update Customer"></input>
+                                            <input type="submit" class="btn btn-primary px-4" value="Add User"></input>
                                         </div>
                                     </div>
 
@@ -109,7 +130,7 @@
                                     </thead>
 
                                     <body>
-                                        <?php foreach ($customer as $row) : ?>
+                                        <?php foreach ($user as $row) : ?>
 
                                             <tr>
                                                 <td><?php echo $row->userid; ?></td>
