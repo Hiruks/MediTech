@@ -239,6 +239,31 @@ class User_model extends CI_Model{
         }
     }
 
+    public function fetchUserDB(){
+        
+        $query = $this->db->query("SELECT * FROM `users`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+    
+    public function getUserDataByID($id){
+        $condition = "userid='{$id}'";
+        $query = $this->db->select('*')
+                        ->where($condition)
+                        ->get('users');
+        
+        return $query->result();
+        if($query->num_rows() == 1){
+            return $query->result();
+        }else{
+            return false;
+        }
+    }
+
 }
 
 ?>

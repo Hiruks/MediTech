@@ -316,18 +316,18 @@ class Login extends CI_Controller
         }
         if ($this->checkSessionExist()) {
 
-            $result = $this->user_model->fetchCustomerDB();
+            $result = $this->user_model->fetchUserDB();
 
             if ($result) {
-                $data['customer'] = $result;
-                $this->load->view('customer-management/customer-management', $data);
+                $data['user'] = $result;
+                $this->load->view('user-management/user-management', $data);
             }
         } else {
             $this->load->view('auth/login', $data);
         }
     }
 
-    public function addcustomer()
+    public function adduser()
     {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
@@ -339,21 +339,21 @@ class Login extends CI_Controller
             $data['error'] = $error;
         }
         if (isset($data['error']) || isset($data['success'])) {
-            $result = $this->user_model->fetchCustomerDB();
+            $result = $this->user_model->fetchUserDB();
 
             if ($result) {
-                $data['customer'] = $result;
-                $this->load->view('customer-management/customer-management', $data);
+                $data['user'] = $result;
+                $this->load->view('user-management/user-management', $data);
             }
         } else {
 
             if ($this->checkSessionExist()) {
 
-                $result = $this->user_model->fetchCustomerDB();
+                $result = $this->user_model->fetchUserDB();
 
                 if ($result) {
-                    $data['customer'] = $result;
-                    $this->load->view('customer-management/add-customer-management', $data);
+                    $data['user'] = $result;
+                    $this->load->view('user-management/add-user-management', $data);
                 }
             } else {
                 $this->load->view('auth/login', $data);
@@ -361,7 +361,7 @@ class Login extends CI_Controller
         }
     }
 
-    public function addCustomerSubmit()
+    public function addUserSubmit()
     {
         //loading stuff here
         $this->form_validation->set_rules('email', 'Email', 'required');
@@ -369,7 +369,7 @@ class Login extends CI_Controller
         $this->form_validation->set_rules('contact', 'Contact', 'required');
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('error', 'Form details cannot be empty');
-            redirect("/login/addcustomer/");
+            redirect("/login/adduser/");
         } else {
             //print_r($_POST);
 
@@ -379,22 +379,22 @@ class Login extends CI_Controller
                 'contactNo' => $_POST['contact']
             );
 
-            $result = $this->user_model->addCustomer($data);
+            $result = $this->user_model->addUser($data);
 
             if ($result == 1) {
                 $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
-                redirect('login/addCustomer');
+                redirect('login/addUser');
             } elseif ($result == 0) {
                 $data['success'] = $this->session->set_flashdata('success', 'Customer added successfully.');
-                redirect('login/addCustomer');
+                redirect('login/addUser');
             } else {
                 $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
-                redirect("login/addCustomer");
+                redirect("login/addUser");
             }
         }
     }
 
-    public function editCustomer($id)
+    public function editUser($id)
     {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
@@ -408,22 +408,22 @@ class Login extends CI_Controller
 
         if ($this->checkSessionExist()) {
 
-            $result = $this->user_model->fetchCustomerDB();
-            $customerFP = $this->user_model->getCustomerDataByID($id);
+            $result = $this->user_model->fetchUserDB();
+            $customerFP = $this->user_model->getUserDataByID($id);
 
             if ($result && $customerFP) {
 
                 $data['customer'] = $result;
                 $data['table'] = $customerFP;
 
-                $this->load->view('customer-management/edit-customer-management', $data);
+                $this->load->view('user-management/edit-user-management', $data);
             }
         } else {
             $this->load->view('auth/login', $data);
         }
     }
 
-    public function editCustomerSubmit($id)
+    public function editUserSubmit($id)
     {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
@@ -437,7 +437,7 @@ class Login extends CI_Controller
 
         if ($this->checkSessionExist()) {
 
-            $result = $this->user_model->fetchCustomerDB();
+            $result = $this->user_model->fetchUserDB();
             $customerFP = $this->user_model->getCustomerDataByID($id);
 
             if ($result && $customerFP) {
@@ -451,17 +451,17 @@ class Login extends CI_Controller
                     'contactNo' => $_POST['contact']
                 );
 
-                $result = $this->user_model->editCustomerData($id, $data);
+                $result = $this->user_model->editUserData($id, $data);
 
                 if ($result == 1) {
                     $data['success'] = $this->session->set_flashdata('success', 'Customer edited successfully');
-                    redirect('login/customerMng');
+                    redirect('login/userMng');
                 } elseif ($result == 0) {
                     $data['success'] = $this->session->set_flashdata('error', 'No edits were made.');
-                    redirect('login/customerMng');
+                    redirect('login/userMng');
                 } else {
                     $this->session->set_flashdata('error', 'Error occured please try again');
-                    redirect("/login/customerMng");
+                    redirect("/login/userMng");
                 }
             }
         } else {
@@ -471,7 +471,7 @@ class Login extends CI_Controller
 
 
 
-    public function delCustomer($id)
+    public function delUser($id)
     {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
@@ -484,19 +484,19 @@ class Login extends CI_Controller
         }
 
         if ($this->checkSessionExist()) {
-            $result = $this->user_model->delCustomer($id);
+            $result = $this->user_model->delUser($id);
             if ($result) {
                 $data['success'] = $this->session->set_flashdata('success', 'Record deleted successfully.');
-                redirect('login/customerMng');
+                redirect('login/userMng');
             } else {
                 $data['success'] = $this->session->set_flashdata('error', 'Error, the record was not deleted.');
-                redirect("/login/customerMng");
+                redirect("/login/userMng");
             }
         } else {
             $this->load->view('auth/login', $data);
         }
     }
-
+    // bruhhhhhhhhhh
 
     //fetchCustomerDB();
     public function customerMng()
