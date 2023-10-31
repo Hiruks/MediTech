@@ -296,7 +296,7 @@ class User_model extends CI_Model{
 
     public function delUser($id){
         //DELETE FROM customers WHERE `customers`.`custID` = 19
-        $condition = "useid='{$id}'";
+        $condition = "userid='{$id}'";
         $this->db->where($condition);
         $this->db->delete('users');
         if($this->db->affected_rows() == 1){
