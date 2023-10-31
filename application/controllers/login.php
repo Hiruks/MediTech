@@ -303,7 +303,7 @@ class Login extends CI_Controller
     }
 
     //this is the stuff u need to change 👇
-    public function customerMng()
+    public function userMng()
     {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
