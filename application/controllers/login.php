@@ -446,7 +446,7 @@ class Login extends CI_Controller
         if ($this->checkSessionExist()) {
 
             $result = $this->user_model->fetchUserDB();
-            $customerFP = $this->user_model->getCustomerDataByID($id);
+            $customerFP = $this->user_model->getUserDataByID($id);
 
             if ($result && $customerFP) {
 
