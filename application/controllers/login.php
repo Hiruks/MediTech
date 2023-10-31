@@ -750,8 +750,10 @@ class Login extends CI_Controller
         }
         if ($this->checkSessionExist()) {
             $result = $this->user_model->fetchBlacklistedCustomers();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
             if ($result) {
                 $data['customer'] = $result;
+                //$data['overdueCust'] = $overdue;
                 $this->load->view('blacklist/blacklist', $data);
             }
         } else {
@@ -762,8 +764,10 @@ class Login extends CI_Controller
     public function searchSubmit() {
         $searchTerm = $_POST['value'];
         $result = $this->user_model->searchCustomerByName($searchTerm);
+        //$overdue = $this->userlogin->fetchOverdueCustomers();
         if ($result) {
             $data['customer'] = $result;
+            //$data['overdueCust'] = $overdue;
             $this->load->view('blacklist/blacklist', $data);
         } else {
             $data['error'] = $this->session->set_flashdata('error', 'No results found');
