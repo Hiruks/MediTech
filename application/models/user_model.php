@@ -1,6 +1,17 @@
 <?php 
 
 class User_model extends CI_Model{
+    
+    public function fetchBlacklistedCustomers(){
+        
+        $query = $this->db->query("SELECT * FROM `customers` WHERE `status` = 'blacklisted'");
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
 
     public function fetchProducts(){
         
@@ -65,6 +76,22 @@ class User_model extends CI_Model{
         
         return $query->result();
         if($query->num_rows() == 1){
+            return $query->result();
+        }else{
+            return false;
+        }
+    }
+
+    public function searchCustomerByName($name){
+        $condition = "name LIKE '%{$name}%'";
+        $condition2 = "`status` = 'blacklisted'";
+        $query = $this->db->select('*')
+                        ->where($condition, NULL, FALSE)
+                        ->where($condition2, NULL, FALSE)
+                        ->get('customers');
+        
+        return $query->result();
+        if($query->num_rows() > 0){
             return $query->result();
         }else{
             return false;

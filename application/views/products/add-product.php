@@ -95,7 +95,7 @@
                                     <div class="row">
                                         <?php if ($product != null) { ?>
                                             <?php foreach ($product as $card) : ?>
-                                                <div class="col-md-4 mb-4">
+                                                <div class="col-md-4 mb-4 d-flex">
                                                     <div class="card">
                                                         <div class="text-center">
                                                             <img src="<?php echo site_url(); ?>/uploads/images/<?php echo $card->img; ?>" class="card-img-top prdimg" alt="...">

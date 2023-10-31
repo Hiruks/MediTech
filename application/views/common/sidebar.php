@@ -27,7 +27,7 @@
 
                 <!-- blacklist -->
 
-                <a href="#" class="list-unstyled">
+                <a href="<?php echo site_url(); ?>/login/blacklist" class="list-unstyled">
                     <span class="material-symbols-rounded">
                         contract_delete
                     </span>

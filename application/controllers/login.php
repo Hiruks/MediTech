@@ -738,6 +738,39 @@ class Login extends CI_Controller
         }
     }
 
+    public function blacklist(){
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->fetchBlacklistedCustomers();
+            if ($result) {
+                $data['customer'] = $result;
+                $this->load->view('blacklist/blacklist', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function searchSubmit() {
+        $searchTerm = $_POST['value'];
+        $result = $this->user_model->searchCustomerByName($searchTerm);
+        if ($result) {
+            $data['customer'] = $result;
+            $this->load->view('blacklist/blacklist', $data);
+        } else {
+            $data['error'] = $this->session->set_flashdata('error', 'No results found');
+            redirect('login/blacklist');
+        }
+    }
+
 
     private function checkSessionExist()
     {
