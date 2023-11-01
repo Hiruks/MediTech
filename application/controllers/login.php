@@ -980,10 +980,10 @@ class Login extends CI_Controller
             $this->load->view('auth/login', $data);
         }
     }
-
-    public function searchSubmit() {
+    
+    public function searchBlacklistSubmit() {
         $searchTerm = $_POST['value'];
-        $result = $this->user_model->searchCustomerByName($searchTerm);
+        $result = $this->user_model->searchBlacklistByName($searchTerm);
         //$overdue = $this->userlogin->fetchOverdueCustomers();
         if ($result) {
             $data['customer'] = $result;
@@ -995,6 +995,101 @@ class Login extends CI_Controller
         }
     }
 
+    public function selectCustomer(){
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->fetchWhitelistedCustomerDB();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['customer'] = $result;
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/select-customer', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+
+    public function searchCustomerSubmit() {
+        $searchTerm = $_POST['value'];
+        $result = $this->user_model->searchCustomerByName($searchTerm);
+        //$overdue = $this->userlogin->fetchOverdueCustomers();
+        if ($result) {
+            $data['customer'] = $result;
+            //$data['overdueCust'] = $overdue;
+            $this->load->view('order-management/select-customer', $data);
+        } else {
+            $data['error'] = $this->session->set_flashdata('error', 'No results found');
+            redirect('login/selectCustomer');
+        }
+    }
+    public function processOrder($id) {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->getCustomerDataByID($id);
+            $creditterms = $this->user_model->fetchCreditTermsDB();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['customer'] = $result;
+                $data['terms'] = $creditterms;
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/create-order', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function addOrderSubmit($id)
+    {
+        //loading stuff here
+        $this->form_validation->set_rules('value', 'Value', 'required');
+        $this->form_validation->set_rules('type', 'Type', 'required');
+        
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', 'Form details cannot be empty');
+            redirect("/login/processOrder/".$id);
+        } else {
+            //print_r($_POST);
+
+            $data = array(
+                'custID' => $id,
+                'creditTermsID' => $_POST['type'],
+                'value' => $_POST['value'],
+            );
+
+            $result = $this->user_model->addOrder($data);
+
+            if ($result == 1) {
+                $data['success'] = $this->session->set_flashdata('success', 'Order added successfully.');
+                redirect('login/selectCustomer');
+            } elseif ($result == 0) {
+                $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
+                redirect('login/selectCustomer');
+            } else {
+                $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
+                redirect("login/processOrder/".$id);
+            }
+        }
+    }
 
     private function checkSessionExist()
     {

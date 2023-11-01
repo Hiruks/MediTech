@@ -30,7 +30,7 @@
                 <div class="dynamic-page container m-2">
 
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Blacklist</h1>
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">Orders</h1>
                     <?php
 
                     if (isset($success)) {
@@ -48,7 +48,7 @@
                     <div class="container">
                         <div class="row">
                             <div class=" mt-4 innercont p-5 me-4">
-                                <?php echo form_open('login/searchBlacklistSubmit'); ?>
+                                <?php echo form_open('login/searchOrderSubmit'); ?>
 
                                 <div class="form-group mb-4 d-flex">
                                     <input type="text" name="value" class="form-control" placeholder="Search customer name">
@@ -81,7 +81,13 @@
                                                 <td><?php echo $row->email; ?></td>
                                                 <td><?php echo $row->contactNo; ?></td>
                                                 <td><?php echo $row->registered_date; ?></td>
+                                                <td>
+                                                    <div class="flex">
+                                                    <a href="<?php echo site_url(); ?>login/processOrder/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Select</a>
+                                                    </div>
 
+
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </body>

@@ -112,6 +112,21 @@ class User_model extends CI_Model
         }
     }
 
+    public function fetchWhitelistedCustomerDB()
+    {
+        $condition = "`status` = 'whitelisted'";
+
+        $query = $this->db->select('*')
+            ->where($condition, NULL, FALSE)
+            ->get('customers');;
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function getCustomerDataByID($id)
     {
         $condition = "custID='{$id}'";
@@ -127,7 +142,7 @@ class User_model extends CI_Model
         }
     }
 
-    public function searchCustomerByName($name)
+    public function searchBlacklistByName($name)
     {
         $condition = "name LIKE '%{$name}%'";
         $condition2 = "`status` = 'blacklisted'";
@@ -136,13 +151,32 @@ class User_model extends CI_Model
             ->where($condition2, NULL, FALSE)
             ->get('customers');
 
-        return $query->result();
+
         if ($query->num_rows() > 0) {
             return $query->result();
         } else {
             return false;
         }
     }
+
+    public function searchCustomerByName($name)
+    {
+        $condition = "name LIKE '%{$name}%'";
+        $condition2 = "`status` = 'whitelisted'";
+
+        $query = $this->db->select('*')
+            ->where($condition, NULL, FALSE)
+            ->where($condition2, NULL, FALSE)
+            ->get('customers');
+
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
 
 
     public function editCustomerData($id, $customer)
@@ -202,18 +236,18 @@ class User_model extends CI_Model
     public function getUserTypes()
     {
         $sql = "SELECT SUBSTRING(COLUMN_TYPE, 6, LENGTH(COLUMN_TYPE) - 6) AS enum_values "
-             . "FROM information_schema.COLUMNS "
-             . "WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'userType';";
-        
+            . "FROM information_schema.COLUMNS "
+            . "WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'userType';";
+
         $query = $this->db->query($sql);
-    
+
         if ($query) {
             return $query->result();
         } else {
             return false;
         }
     }
-    
+
 
     public function getUserData($data)
     {
@@ -348,4 +382,39 @@ class User_model extends CI_Model
             return false;
         }
     }
+
+    // ----------------------Order Model----------------------------
+
+    public function fetchCreditTermsDB()
+    {
+
+        $query = $this->db->query("SELECT * FROM `creditterms`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function addOrder($data)
+    {
+
+        $this->db->set('custID', $data['custID']);
+        $this->db->set('value', $data['value']);
+        $this->db->set('creditTermID', $data['creditTermsID']);
+
+
+        $query = $this->db->insert('orders');
+
+        if ($this->db->affected_rows() == 1) {
+            return (1);
+        } else if ($this->db->affected_rows() == 0) {
+            return (0);
+        } else {
+            return (-1);
+        }
+    }
+
+
 }
