@@ -65,14 +65,14 @@
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Email</label>
-                                            <input type="text" value="<?php echo $table[0]->email ?>"name="email" class="form-control" placeholder="Enter user email address">
+                                            <input type="text" value="<?php echo $table[0]->email ?>" name="email" class="form-control" placeholder="Enter user email address">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
                                             <label>Contact Number</label>
-                                            <input type="text" value="<?php echo $table[0]->contactNo ?>"name="contact" class="form-control" placeholder="Enter user contact number">
+                                            <input type="text" value="<?php echo $table[0]->contactNo ?>" name="contact" class="form-control" placeholder="Enter user contact number">
                                         </div>
                                     </div>
 
@@ -92,8 +92,40 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
-                                            <label>User Type</label>
-                                            <input type="text" value="<?php echo $table[0]->userType?>" name="type" class="form-control" placeholder="Enter user type">
+
+                                            <label >Select a user type:</label>
+                                            
+                                            <select name="type" class="form-control">
+                                                <?php
+                                                // Assuming $result contains the query result
+                                                if ($dropdown) {
+                                                    $row = $dropdown[0]; // Assuming there's only one row in the result
+
+                                                    // Extract ENUM values and split them into an array
+                                                    $enum_values = $row->enum_values;
+                                                    $enum_array = explode("','", trim($enum_values, "''"));
+
+                                                    // Assign each value to separate variables
+
+                                                    foreach ($enum_array as &$value) {
+                                                        $value = trim($value, "'");
+                                                    }
+
+                                                    print_r($enum_array);
+
+                                                    foreach ($enum_array as $option) {
+                                                        echo "<option value='$option'>$option</option>";
+
+                                                    }
+                                                }
+
+                                                ?>
+
+
+
+                                            </select>
+
+
                                         </div>
                                     </div>
 
@@ -115,7 +147,7 @@
                                 <!-- table view -->
 
 
-                                  <table class="table">
+                                <table class="table">
 
                                     <thead>
                                         <tr>
@@ -143,7 +175,7 @@
 
                                                 <td>
                                                     <div class="flex">
-                                                    <a href="<?php echo site_url(); ?>login/editUser/<?php echo $row->userid; ?>" class="btn btn-success btn-sm">Edit</a>
+                                                        <a href="<?php echo site_url(); ?>login/editUser/<?php echo $row->userid; ?>" class="btn btn-success btn-sm">Edit</a>
                                                         <a href="<?php echo site_url(); ?>login/delUser/<?php echo $row->userid; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                     </div>
 

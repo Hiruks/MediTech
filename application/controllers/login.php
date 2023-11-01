@@ -343,6 +343,7 @@ class Login extends CI_Controller
 
             if ($result) {
                 $data['user'] = $result;
+
                 $this->load->view('user-management/user-management', $data);
             }
         } else {
@@ -350,9 +351,13 @@ class Login extends CI_Controller
             if ($this->checkSessionExist()) {
 
                 $result = $this->user_model->fetchUserDB();
+                $userType = $this->user_model->getUserTypes();
+
 
                 if ($result) {
                     $data['user'] = $result;
+                    $data['dropdown'] = $userType;
+
                     $this->load->view('user-management/add-user-management', $data);
                 }
             } else {
@@ -418,9 +423,12 @@ class Login extends CI_Controller
 
             $result = $this->user_model->fetchUserDB();
             $customerFP = $this->user_model->getUserDataByID($id);
+            $userType = $this->user_model->getUserTypes();
+            //print_r($userType);
 
-            if ($result && $customerFP) {
+            if ($result && $customerFP && $userType) {
 
+                $data['dropdown'] = $userType;
                 $data['user'] = $result;
                 $data['table'] = $customerFP;
 
@@ -452,6 +460,7 @@ class Login extends CI_Controller
 
                 //$data['customer'] = $result;
 
+
                 $data = array(
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
@@ -466,6 +475,7 @@ class Login extends CI_Controller
 
                 if ($result == 1) {
                     $data['success'] = $this->session->set_flashdata('success', 'User edited successfully');
+
                     redirect('login/userMng');
                 } elseif ($result == 0) {
                     $data['success'] = $this->session->set_flashdata('error', 'No edits were made.');

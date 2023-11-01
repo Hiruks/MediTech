@@ -92,8 +92,40 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-4">
-                                            <label>User Type</label>
-                                            <input type="text" name="type" class="form-control" placeholder="Enter user type">
+
+                                            <label >Select a user type:</label>
+                                            
+                                            <select name="type" class="form-control">
+                                                <?php
+                                                // Assuming $result contains the query result
+                                                if ($dropdown) {
+                                                    $row = $dropdown[0]; // Assuming there's only one row in the result
+
+                                                    // Extract ENUM values and split them into an array
+                                                    $enum_values = $row->enum_values;
+                                                    $enum_array = explode("','", trim($enum_values, "''"));
+
+                                                    // Assign each value to separate variables
+
+                                                    foreach ($enum_array as &$value) {
+                                                        $value = trim($value, "'");
+                                                    }
+
+                                                    print_r($enum_array);
+
+                                                    foreach ($enum_array as $option) {
+                                                        echo "<option value='$option'>$option</option>";
+
+                                                    }
+                                                }
+
+                                                ?>
+
+
+
+                                            </select>
+
+
                                         </div>
                                     </div>
 
