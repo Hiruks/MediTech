@@ -975,6 +975,10 @@ class Login extends CI_Controller
                 $data['customer'] = $result;
                 //$data['overdueCust'] = $overdue;
                 $this->load->view('blacklist/blacklist', $data);
+            }else{
+                $data['error'] = "No records were found";
+                $this->load->view('blacklist/empty-blacklist', $data);
+
             }
         } else {
             $this->load->view('auth/login', $data);
