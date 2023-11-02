@@ -30,7 +30,7 @@
                 <div class="dynamic-page container m-2">
 
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Orders</h1>
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">Order Management</h1>
                     <?php
 
                     if (isset($success)) {
@@ -51,7 +51,7 @@
                                 <?php echo form_open('login/searchOrderSubmit'); ?>
 
                                 <div class="form-group mb-4 d-flex">
-                                    <input type="text" name="value" class="form-control" placeholder="Search customer name">
+                                    <input type="text" name="value" class="form-control" placeholder="Search order by customer">
                                     <input type="submit" class="btn btn-primary px-4 mx-4" value="Search"></input>
                                 </div>
                                 <?php echo form_close(); ?>
@@ -63,31 +63,27 @@
 
                                     <thead>
                                         <tr>
-                                            <th>Customer ID</th>
+                                            <th>Order ID</th>
                                             <th>Customer Name</th>
-                                            <th>Email</th>
-                                            <th>Contact Number</th>
-                                            <th>Registered Date</th>
+                                            <th>Value</th>
+                                            <th>Status</th>
+                                            <th>Created Date</th>
                                         </tr>
                                     </thead>
 
                                     <body>
 
-                                        <?php foreach ($customer as $row) : ?>
+                                        <?php foreach ($orders as $order) : ?>
 
                                             <tr>
-                                                <td><?php echo $row->custID; ?></td>
-                                                <td><?php echo $row->name; ?></td>
-                                                <td><?php echo $row->email; ?></td>
-                                                <td><?php echo $row->contactNo; ?></td>
-                                                <td><?php echo $row->registered_date; ?></td>
-                                                <td>
-                                                    <div class="flex">
-                                                    <a href="<?php echo site_url(); ?>login/processOrder/<?php echo $row->custID; ?>" class="btn btn-success btn-sm">Select</a>
-                                                    </div>
+                                                
+                                               
+                                                <td><?php echo $order->id; ?></td>
+                                                <td><?php echo $order->name?></td>
+                                                <td><?php echo $order->value; ?></td>
+                                                <td><?php echo $order->isPaid; ?></td>
+                                                <td><?php echo $order->created_date; ?></td>
 
-
-                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </body>
@@ -99,7 +95,7 @@
 
 
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

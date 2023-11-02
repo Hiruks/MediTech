@@ -40,7 +40,7 @@
 
                 <!-- orders -->
 
-                <a href="<?php echo site_url(); ?>/login/selectCustomer" class="list-unstyled">
+                <a href="<?php echo site_url(); ?>/login/orderMng" class="list-unstyled">
                     <span class="material-symbols-rounded">
                         orders
                     </span>

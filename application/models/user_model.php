@@ -142,6 +142,35 @@ class User_model extends CI_Model
         }
     }
 
+    public function getCustomerNameByID($id)
+    {
+        $condition = "custID='{$id}'";
+
+        $query = $this->db->select('*')
+            ->where($condition)
+            ->get('customers');
+
+        return $query->result();
+        if ($query->num_rows() == 1) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchOrderNames()
+    {
+
+        $query = $this->db->query("SELECT `name` FROM `customers`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+
     public function searchBlacklistByName($name)
     {
         $condition = "name LIKE '%{$name}%'";
@@ -277,6 +306,7 @@ class User_model extends CI_Model
         }
     }
 
+    
     public function updateProfile($data)
     {
         $condition = "userid='{$data['id']}'";
@@ -397,6 +427,17 @@ class User_model extends CI_Model
         }
     }
 
+    public function fetchOrdersWCustomers()
+    {
+        $query = $this->db->query("SELECT orders.*,customers.name FROM orders orders, customers customers where customers.custID = orders.custID");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function addOrder($data)
     {
 
@@ -413,6 +454,20 @@ class User_model extends CI_Model
             return (0);
         } else {
             return (-1);
+        }
+    }
+
+    public function searchOrderByName($name)
+    {
+        $condition = "name LIKE '%{$name}%'";
+
+        $query = $this->db->query("SELECT orders.*,customers.name FROM orders orders, customers customers where customers.custID = orders.custID AND $condition");
+
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
         }
     }
 

@@ -999,6 +999,48 @@ class Login extends CI_Controller
         }
     }
 
+    public function orderMng(){
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchOrdersWCustomers();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                //print_r($result);
+                $data['orders'] = $result;
+                //$data['orderName'] = $result2;
+
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/order-management', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+
+    public function searchOrderSubmit() {
+        $searchTerm = $_POST['value'];
+        $result = $this->user_model->searchOrderByName($searchTerm);
+        //$overdue = $this->userlogin->fetchOverdueCustomers();
+        if ($result) {
+            $data['orders'] = $result;
+            //$data['overdueCust'] = $overdue;
+            $this->load->view('order-management/order-management', $data);
+        } else {
+            $data['error'] = $this->session->set_flashdata('error', 'No results found');
+            redirect('login/orderMng');
+        }
+    }
+
     public function selectCustomer(){
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
@@ -1084,13 +1126,13 @@ class Login extends CI_Controller
 
             if ($result == 1) {
                 $data['success'] = $this->session->set_flashdata('success', 'Order added successfully.');
-                redirect('login/selectCustomer');
+                redirect('login/orderMng');
             } elseif ($result == 0) {
                 $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
-                redirect('login/selectCustomer');
+                redirect('login/orderMng');
             } else {
                 $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
-                redirect("login/processOrder/".$id);
+                redirect("login/selectCustomer");
             }
         }
     }
