@@ -1053,9 +1053,13 @@ class Login extends CI_Controller
         }
         if ($this->checkSessionExist()) {
             $result = $this->user_model->fetchWhitelistedCustomerDB();
+            $result2 = $this->user_model->fetchOrdersWCustomers();
+            
             //$overdue = $this->userlogin->fetchOverdueCustomers();
             if ($result) {
                 $data['customer'] = $result;
+                $data['orders'] = $result2;
+
                 //$data['overdueCust'] = $overdue;
                 $this->load->view('order-management/select-customer', $data);
             }
@@ -1068,9 +1072,13 @@ class Login extends CI_Controller
     public function searchCustomerSubmit() {
         $searchTerm = $_POST['value'];
         $result = $this->user_model->searchCustomerByName($searchTerm);
+        $result2 = $this->user_model->fetchOrdersWCustomers();
+        
         //$overdue = $this->userlogin->fetchOverdueCustomers();
         if ($result) {
             $data['customer'] = $result;
+            $data['orders'] = $result2;
+
             //$data['overdueCust'] = $overdue;
             $this->load->view('order-management/select-customer', $data);
         } else {

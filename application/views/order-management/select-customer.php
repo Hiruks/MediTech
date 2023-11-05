@@ -30,7 +30,7 @@
                 <div class="dynamic-page container m-2">
 
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Create an order</h1>
+                    <h1 style="font-weight: 800; font-size: 2.5rem;">Order Management</h1>
                     <?php
 
                     if (isset($success)) {
@@ -48,6 +48,9 @@
                     <div class="container">
                         <div class="row">
                             <div class=" mt-4 innercont p-5 me-4">
+
+                                <h2 class="mb-4">Select a customer</h2>
+
                                 <?php echo form_open('login/searchCustomerSubmit'); ?>
 
                                 <div class="form-group mb-4 d-flex">
@@ -96,6 +99,50 @@
 
 
 
+
+
+                            </div>
+
+                            <div class=" mt-4 innercont p-5 me-4">
+
+                                
+
+                                <!-- table view -->
+
+
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Value</th>
+                                            <th>Status</th>
+                                            <th>Created Date</th>
+                                        </tr>
+                                    </thead>
+
+                                    <body>
+
+                                        <?php foreach ($orders as $order) : ?>
+
+                                            <tr>
+
+
+                                                <td><?php echo $order->id; ?></td>
+                                                <td><?php echo $order->name ?></td>
+                                                <td><?php echo $order->value; ?></td>
+                                                <td><?php echo $order->isPaid; ?></td>
+                                                <td><?php echo $order->created_date; ?></td>
+
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </body>
+
+                                </table>
+
+
+                    
 
 
                             </div>

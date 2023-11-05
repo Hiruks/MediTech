@@ -45,9 +45,23 @@
                     }
                     ?>
 
+
                     <div class="container">
                         <div class="row">
+
                             <div class=" mt-4 innercont p-5 me-4">
+                                <div class="d-flex box-button">
+
+                                    <a href="<?php echo site_url(); ?>/login/selectCustomer" class="btn button-28">Add Order</a>
+                                    <a href="<?php echo site_url(); ?>/login/addcustomer" class="btn mx-4 button-28">New Customer</a>
+
+                                </div>
+                            </div>
+
+                            <div class=" mt-4 innercont p-5 me-4">
+
+
+
                                 <?php echo form_open('login/searchOrderSubmit'); ?>
 
                                 <div class="form-group mb-4 d-flex">
@@ -76,10 +90,10 @@
                                         <?php foreach ($orders as $order) : ?>
 
                                             <tr>
-                                                
-                                               
+
+
                                                 <td><?php echo $order->id; ?></td>
-                                                <td><?php echo $order->name?></td>
+                                                <td><?php echo $order->name ?></td>
                                                 <td><?php echo $order->value; ?></td>
                                                 <td><?php echo $order->isPaid; ?></td>
                                                 <td><?php echo $order->created_date; ?></td>
