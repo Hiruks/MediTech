@@ -52,8 +52,8 @@
                             <div class=" mt-4 innercont p-5 me-4">
                                 <div class="d-flex box-button">
 
-                                    <a href="<?php echo site_url(); ?>/login/selectCustomer" class="btn button-28">Add Order</a>
-                                    <a href="<?php echo site_url(); ?>/login/addcustomer" class="btn mx-4 button-28">New Customer</a>
+                                    <a href="<?php echo site_url(); ?>/login/selectCustomer" class="btn btn-primary shadow"><span class="material-icons custom-icon">shopping_cart</span> Add Order</a>
+                                    <a href="<?php echo site_url(); ?>/login/addcustomer" class="btn btn-primary mx-4 shadow"><span class="material-icons custom-icon">person</span> New Customer</a>
 
                                 </div>
                             </div>

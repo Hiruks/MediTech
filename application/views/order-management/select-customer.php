@@ -102,12 +102,12 @@
 
 
                             </div>
-
+                                            <!--
                             <div class=" mt-4 innercont p-5 me-4">
 
                                 
 
-                                <!-- table view -->
+                                
 
 
                                 <table class="table">
@@ -146,6 +146,8 @@
 
 
                             </div>
+
+                                        -->
                             
                         </div>
                     </div>
