@@ -76,6 +76,13 @@
                                     </div>
 
                                     <div class="col-md-12">
+                                        <div class="form-group mb-4">
+                                            <label>Price</label>
+                                            <input type="text" name="price" class="form-control" value="<?php echo $info[0]->price; ?>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <input type="submit" class="btn btn-primary px-4" value="Edit Product"></input>
                                         </div>
@@ -111,6 +118,8 @@
                                                                     <a href="<?php echo site_url(); ?>login/delProduct/<?php echo $card->productID; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                                 </div>
                                                             </div>
+                                                            <h4><?php echo $card->price; ?></h4>
+
                                                         </div>
                                                     </div>
                                                 </div>

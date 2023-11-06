@@ -95,8 +95,31 @@
                                                 <td><?php echo $order->id; ?></td>
                                                 <td><?php echo $order->name ?></td>
                                                 <td><?php echo $order->value; ?></td>
-                                                <td><?php echo $order->isPaid; ?></td>
+                                                <td <?php
+
+                                                    if ($order->isPaid == 1) {
+                                                        echo "class='text-success'";
+                                                    } else {
+
+                                                        echo "class='text-danger'";
+                                                    }
+                                                    ?>><?php
+
+                                                    if ($order->isPaid == 1) {
+
+                                                        echo "Paid";
+                                                    } else {
+
+                                                        echo "Unpaid";
+                                                    }
+                                                    ?></td>
                                                 <td><?php echo $order->created_date; ?></td>
+                                                <td>
+                                                <div class="flex">
+                                                    <a href="<?php echo site_url(); ?>login/orderUpdate/<?php echo $order->id; ?>" class="btn btn-success shadow-sm btn-sm">Update</a>
+                                                </div>
+                                                </td>
+
 
                                             </tr>
                                         <?php endforeach; ?>

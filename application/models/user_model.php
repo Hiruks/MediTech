@@ -13,6 +13,8 @@ class User_model extends CI_Model
         $this->db->set('title', $data['title']);
         $this->db->set('description', $data['description']);
         $this->db->set('img', $data['img']);
+        $this->db->set('price', $data['price']);
+
 
         $this->db->where($condition);
         $this->db->update('products');
@@ -60,6 +62,8 @@ class User_model extends CI_Model
         $this->db->set('title', $data['title']);
         $this->db->set('description', $data['description']);
         $this->db->set('img', $data['img']);
+        $this->db->set('price', $data['price']);
+
 
         $query = $this->db->insert('products');
 
@@ -306,7 +310,7 @@ class User_model extends CI_Model
         }
     }
 
-    
+
     public function updateProfile($data)
     {
         $condition = "userid='{$data['id']}'";
@@ -438,6 +442,46 @@ class User_model extends CI_Model
         }
     }
 
+    public function fetchOrdersWCustomerID($id)
+    {
+        $query = $this->db->query("SELECT * FROM orders JOIN customers ON customers.custID = orders.custID WHERE orders.id = $id");
+        //print_r($query->result());
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchOrdersWCreditTerms($id)
+    {
+        $query = $this->db->query("SELECT * FROM orders JOIN creditterms ON creditterms.id = orders.creditTermID WHERE orders.id = $id");
+        //print_r($query->result());
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getOrderProducts($id)
+    {
+        $sql = "SELECT products.*, order_products.*
+          FROM order_products
+          INNER JOIN products ON order_products.product_id = products.productID
+          WHERE order_products.order_id = $id";
+
+        $query = $this->db->query($sql);
+        //print_r($query->result());
+        
+        
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function addOrder($data)
     {
 
@@ -457,6 +501,44 @@ class User_model extends CI_Model
         }
     }
 
+    public function updatePayment($id)
+    {
+        $condition = "id='{$id}'";
+
+        $this->db->set('isPaid', 1);
+        $this->db->where($condition);
+        $this->db->update('orders');
+
+        if ($this->db->affected_rows() == 1) {
+            return (1);
+        } else if ($this->db->affected_rows() == 0) {
+            return (0);
+        } else {
+            return (-1);
+        }
+    }
+
+    public function addConfirmationRecord($data)
+    {
+
+        $this->db->set('orderID', $data['orderID']);
+        $this->db->set('img', $data['img']);
+        $this->db->set('reciptNo', $data['reciptNo']);
+
+
+        $query = $this->db->insert('payment_records');
+
+        if ($this->db->affected_rows() == 1) {
+            return (1);
+        } else if ($this->db->affected_rows() == 0) {
+            return (0);
+        } else {
+            return (-1);
+        }
+    }
+
+
+
     public function searchOrderByName($name)
     {
         $condition = "name LIKE '%{$name}%'";
@@ -470,6 +552,4 @@ class User_model extends CI_Model
             return false;
         }
     }
-
-
 }

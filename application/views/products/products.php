@@ -76,8 +76,12 @@
                                                                     <div class="flex">
                                                                         <a href="<?php echo site_url(); ?>login/editProduct/<?php echo $card->productID; ?>" class="btn btn-success btn-sm">Edit</a>
                                                                         <a href="<?php echo site_url(); ?>login/delProduct/<?php echo $card->productID; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                                        
+                                                                        
                                                                     </div>
                                                                 </div>
+                                                                <h4><?php echo $card->price; ?></h4>
+
                                                             </div>
                                                         </div>
                                                     </div>
