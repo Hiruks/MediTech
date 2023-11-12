@@ -59,10 +59,18 @@
                                                     <p style="font-size: 20px;">Invoice &gt;&gt; <strong>ID: <?php echo $orders[0]->id; ?></strong></p>
                                                 </div>
                                                 <?php if ($orders[0]->isPaid == "0") { ?>
-                                                <div class="col-xl-3">
-                                                <a href="<?php echo site_url(); ?>login/orderUpdateForm/<?php echo $orders[0]->id ?>" class="btn btn-success shadow me-6" style="width=100px;">Confirm Payment<i class="fas fa-check-circle ms-2"></i></a>
-                                                </div>
-                                                <?php }?>
+                                                    <div class="col-xl-3">
+                                                        <a href="<?php echo site_url(); ?>login/orderUpdateForm/<?php echo $orders[0]->id ?>" class="btn btn-success shadow me-6" style="width=100px;">Confirm Payment<i class="fas fa-check-circle ms-2"></i></a>
+                                                    </div>
+                                                <?php } else { ?>
+                                                    <div class="col-xl-3">
+                                                        <i class="far fa-check-circle fa-lg text-success ms-2 pr-2"></i>
+
+                                                        <a href="<?php echo site_url(); ?>login/orderPaymentDetails/<?php echo $orders[0]->id ?>" class="btn btn-success shadow me-6" style="width=100px; margin-left: 7px;">Payment Details<i class="fas fa-file ms-2"></i>
+                                                        </a>
+                                                    </div>
+                                                <?php } ?>
+
                                             </div>
                                             <div class="container">
 
@@ -132,11 +140,11 @@
                                                             </h5>
                                                         </div>
                                                     </div>
-                                                <hr>
+                                                    <hr>
 
                                                 <?php endforeach; ?>
 
-                                                
+
                                                 <div class="row">
                                                     <div class="col-xl-8">
                                                         <?php $msg = 'Overdue after ' . $credit[0]->overdue_period . ' months | Blacklisted after ' . $credit[0]->blacklisted_period . ' months'; ?>

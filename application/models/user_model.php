@@ -492,7 +492,20 @@ class User_model extends CI_Model
 
         $query = $this->db->insert('orders');
 
-        if ($this->db->affected_rows() == 1) {
+        $orderID = $this->db->insert_id();
+
+        $orderProductData = array();
+        foreach ($data['productID'] as $key => $productID) {
+            $orderProductData[] = array(
+                'order_id' => $orderID,
+                'product_id' => $productID,
+                'quantity' => $data['quantity'][$productID]
+            );
+        }
+
+        $this->db->insert_batch('order_products', $orderProductData);
+
+        if ($this->db->affected_rows() > 0) {
             return (1);
         } else if ($this->db->affected_rows() == 0) {
             return (0);
@@ -552,4 +565,22 @@ class User_model extends CI_Model
             return false;
         }
     }
+
+
+    public function fetchPaymentRecord($id)
+    {
+        $condition = "orderID='{$id}'";
+
+        $query = $this->db->select('*')
+            ->where($condition)
+            ->get('payment_records');
+
+        return $query->result();
+        if ($query->num_rows() == 1) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
 }
