@@ -375,7 +375,7 @@ class Login extends CI_Controller
         $this->form_validation->set_rules('branch', 'Branch', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
         $this->form_validation->set_rules('type', 'Type', 'required');
-        
+
 
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('error', 'Form details cannot be empty');
@@ -728,7 +728,7 @@ class Login extends CI_Controller
         if ($this->checkSessionExist()) {
 
             $result = $this->user_model->fetchProducts();
-            if ($result==null) {
+            if ($result == null) {
                 $data['product'] = null;
                 $this->load->view('products/add-product', $data);
             }
@@ -809,7 +809,8 @@ class Login extends CI_Controller
                 $data = array(
                     'title' => $_POST['title'],
                     'description' => $_POST['description'],
-                    'img' => $new_name
+                    'img' => $new_name,
+                    'price' => $_POST['price']
                 );
 
                 $result = $this->user_model->addProduct($data);
@@ -904,7 +905,8 @@ class Login extends CI_Controller
                 $data = array(
                     'title' => $_POST['title'],
                     'description' => $_POST['description'],
-                    'img' => $new_name
+                    'img' => $new_name,
+                    'price' => $_POST['price'],
                 );
 
                 $result = $this->user_model->editProductData($id, $data);
@@ -958,7 +960,8 @@ class Login extends CI_Controller
         }
     }
 
-    public function blacklist(){
+    public function blacklist()
+    {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
         $data = [];
@@ -975,15 +978,19 @@ class Login extends CI_Controller
                 $data['customer'] = $result;
                 //$data['overdueCust'] = $overdue;
                 $this->load->view('blacklist/blacklist', $data);
+            } else {
+                $data['error'] = "No records were found";
+                $this->load->view('blacklist/empty-blacklist', $data);
             }
         } else {
             $this->load->view('auth/login', $data);
         }
     }
 
-    public function searchSubmit() {
+    public function searchBlacklistSubmit()
+    {
         $searchTerm = $_POST['value'];
-        $result = $this->user_model->searchCustomerByName($searchTerm);
+        $result = $this->user_model->searchBlacklistByName($searchTerm);
         //$overdue = $this->userlogin->fetchOverdueCustomers();
         if ($result) {
             $data['customer'] = $result;
@@ -995,6 +1002,414 @@ class Login extends CI_Controller
         }
     }
 
+    public function orderMng()
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchOrdersWCustomers();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                //print_r($result);
+                $data['orders'] = $result;
+                //$data['orderName'] = $result2;
+
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/order-management', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+
+    public function searchOrderSubmit()
+    {
+        $searchTerm = $_POST['value'];
+        $result = $this->user_model->searchOrderByName($searchTerm);
+        //$overdue = $this->userlogin->fetchOverdueCustomers();
+        if ($result) {
+            $data['orders'] = $result;
+            //$data['overdueCust'] = $overdue;
+            $this->load->view('order-management/order-management', $data);
+        } else {
+            $data['error'] = $this->session->set_flashdata('error', 'No results found');
+            redirect('login/orderMng');
+        }
+    }
+
+    public function selectCustomer()
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->fetchWhitelistedCustomerDB();
+            $result2 = $this->user_model->fetchOrdersWCustomers();
+
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['customer'] = $result;
+                $data['orders'] = $result2;
+
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/select-customer', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+
+    public function searchCustomerSubmit()
+    {
+        $searchTerm = $_POST['value'];
+        $result = $this->user_model->searchCustomerByName($searchTerm);
+        $result2 = $this->user_model->fetchOrdersWCustomers();
+
+        //$overdue = $this->userlogin->fetchOverdueCustomers();
+        if ($result) {
+            $data['customer'] = $result;
+            $data['orders'] = $result2;
+
+            //$data['overdueCust'] = $overdue;
+            $this->load->view('order-management/select-customer', $data);
+        } else {
+            $data['error'] = $this->session->set_flashdata('error', 'No results found');
+            redirect('login/selectCustomer');
+        }
+    }
+    public function processOrder($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->getCustomerDataByID($id);
+            $creditterms = $this->user_model->fetchCreditTermsDB();
+            $products = $this->user_model->fetchProducts();
+            //print_r($products);
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['customer'] = $result;
+                $data['terms'] = $creditterms;
+                $data['products'] = $products;
+                $data['orderID'] = $id;
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/create-order', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function processOrderSubmit($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->getCustomerDataByID($id);
+            $creditterms = $this->user_model->fetchCreditTermsDB();
+            $products = $this->user_model->fetchProducts();
+            print_r($products);
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['customer'] = $result;
+                $data['terms'] = $creditterms;
+                $data['products'] = $products;
+                $data['orderID'] = $id;
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/create-order', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function addProductToOrder($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            if ($id) {
+                $result = $this->user_model->getCustomerDataByID($id);
+                $creditterms = $this->user_model->fetchCreditTermsDB();
+                $products = $this->user_model->fetchProducts();
+                print_r($products);
+                //$overdue = $this->userlogin->fetchOverdueCustomers();
+                if ($result) {
+                    $data['customer'] = $result;
+                    $data['terms'] = $creditterms;
+                    $data['products'] = $products;
+                    $data['orderID'] = $id;
+
+                    //$data['overdueCust'] = $overdue;
+                    $this->load->view('order-management/create-order', $data);
+                }
+            } else {
+                $data['error'] = $this->session->set_flashdata('error', 'No results found');
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function ajaxRequestHandler()
+    {
+        $out = $_GET['value'];
+        $products = $this->user_model->getProductByID($out);
+        $data['products'] = $products;
+
+        // Set the response type to JSON
+        header('Content-Type: application/json');
+
+        // Encode the data as JSON and echo it
+        echo json_encode($data);
+
+        // Exit to stop further processing
+        exit;
+    }
+
+    public function addOrderSubmit($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+
+            $this->form_validation->set_rules('total_order_value', 'Total_order_value', 'required');
+            $this->form_validation->set_rules('type', 'Type', 'required');
+
+
+            if ($this->form_validation->run() == FALSE) {
+                $this->session->set_flashdata('error', 'Form details cannot be empty');
+                redirect("/login/processOrder/" . $id);
+            } else {
+                //print_r($_POST);
+
+                
+
+                $data = array(
+                    'custID' => $id,
+                    'creditTermsID' => $_POST['type'],
+                    'value' => $_POST['total_order_value'],
+                    'productID' => $_POST['product_ids'],
+                    'quantity' => $_POST['product_quantities']
+                );
+
+                if(!($data['productID'] && $data['quantity'])){
+                    $this->session->set_flashdata('error', 'Form details cannot be empty');
+                redirect("/login/processOrder/" . $id);
+                }
+
+                $result = $this->user_model->addOrder($data);
+
+                if ($result == 1) {
+                    $data['success'] = $this->session->set_flashdata('success', 'Order added successfully.');
+                    redirect('login/orderMng');
+                } elseif ($result == 0) {
+                    $data['success'] = $this->session->set_flashdata('success', 'User added successfully.');
+                    redirect('login/orderMng');
+                } else {
+                    $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
+                    redirect("login/selectCustomer");
+                }
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+
+
+
+    public function orderUpdate($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->fetchOrdersWCustomerID($id);
+            $result2 = $this->user_model->getOrderProducts($id);
+            $result3 = $this->user_model->fetchOrdersWCreditTerms($id);
+            //$creditterms = $this->user_model->fetchCreditTermsDB();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['orders'] = $result;
+                $data['products'] = $result2;
+                $data['credit'] = $result3;
+
+                //$data['terms'] = $creditterms;
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/order-view', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function orderUpdateForm($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+            $result = $this->user_model->fetchOrdersWCustomerID($id);
+            $result2 = $this->user_model->getOrderProducts($id);
+            $result3 = $this->user_model->fetchOrdersWCreditTerms($id);
+            //$creditterms = $this->user_model->fetchCreditTermsDB();
+            //$overdue = $this->userlogin->fetchOverdueCustomers();
+            if ($result) {
+                $data['orders'] = $result;
+                $data['products'] = $result2;
+                $data['credit'] = $result3;
+
+                //$data['terms'] = $creditterms;
+                //$data['overdueCust'] = $overdue;
+                $this->load->view('order-management/order-view-confirm', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
+
+    public function orderUpdateSubmit()
+    {
+        //loading stuff here
+        $this->form_validation->set_rules('recipt', 'Recipt', 'required');
+        $id = $_POST['id'];
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', 'Form details cannot be empty');
+            redirect("login/orderUpdateForm/$id");
+        } else {
+            //print_r($_POST
+            // print_r($_POST);
+            $file_extension = pathinfo($_FILES["userfile"]["name"], PATHINFO_EXTENSION);
+
+            // Generate a unique file name
+            $new_name = time() . '_' . mt_rand(100000, 999999) . '.' . $file_extension;
+
+            $config = array(
+                'upload_path' => 'uploads/recipts/',
+                'allowed_types' => "gif|jpg|png|jpeg|pdf",
+                'overwrite' => TRUE,
+                'max_size' => "2048000",
+                // 'max_height' => "768",
+                // 'max_width' => "1024",
+                'file_name' => $new_name
+            );
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+            if ($this->upload->do_upload()) {
+                $data = array('upload_data' => $this->upload->data());
+
+                $data = array(
+                    'orderID' => $_POST['id'],
+                    'reciptNo' => $_POST['recipt'],
+                    'img' => $new_name
+                );
+
+                $result = $this->user_model->addConfirmationRecord($data);
+                $result2 = $this->user_model->updatePayment($id);
+
+                if ($result && $result2 == 1) {
+                    $data['success'] = $this->session->set_flashdata('success', 'Payment Confirmation Success');
+                    redirect('login/orderUpdate/' . $id);
+                } elseif ($result && $result2 == 0) {
+                    $data['error'] = $this->session->set_flashdata('error', 'Confirmation Not Added');
+                    redirect('login/orderUpdate/' . $id);
+                } else {
+                    $data['error'] = $this->session->set_flashdata('error', 'Error occured please try again');
+                    redirect('login/orderMng');
+                }
+            } else {
+                /*$error = array('error' => $this->upload->display_errors());
+                print_r($error); */
+                $error = $this->upload->display_errors();
+
+                $data['error'] = $this->session->set_flashdata('error', $error);
+                redirect("login/orderUpdateForm/$id");
+                //$this->load->view('custom_view', $error);
+            }
+        }
+    }
+
+    public function orderPaymentDetails($id)
+    {
+        $success = $this->session->flashdata('success');
+        $error = $this->session->flashdata('error');
+        $data = [];
+        if (!empty($success)) {
+            $data['success'] = $success;
+        }
+        if (!empty($error)) {
+            $data['error'] = $error;
+        }
+        if ($this->checkSessionExist()) {
+
+            $result = $this->user_model->fetchPaymentRecord($id);
+
+            if ($result) {
+                $data['records'] = $result;
+
+                $this->load->view('order-management/payment-details.php', $data);
+            }
+        } else {
+            $this->load->view('auth/login', $data);
+        }
+    }
 
     private function checkSessionExist()
     {

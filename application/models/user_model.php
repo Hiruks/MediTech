@@ -13,6 +13,8 @@ class User_model extends CI_Model
         $this->db->set('title', $data['title']);
         $this->db->set('description', $data['description']);
         $this->db->set('img', $data['img']);
+        $this->db->set('price', $data['price']);
+
 
         $this->db->where($condition);
         $this->db->update('products');
@@ -60,6 +62,8 @@ class User_model extends CI_Model
         $this->db->set('title', $data['title']);
         $this->db->set('description', $data['description']);
         $this->db->set('img', $data['img']);
+        $this->db->set('price', $data['price']);
+
 
         $query = $this->db->insert('products');
 
@@ -112,6 +116,21 @@ class User_model extends CI_Model
         }
     }
 
+    public function fetchWhitelistedCustomerDB()
+    {
+        $condition = "`status` = 'whitelisted'";
+
+        $query = $this->db->select('*')
+            ->where($condition, NULL, FALSE)
+            ->get('customers');;
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function getCustomerDataByID($id)
     {
         $condition = "custID='{$id}'";
@@ -127,7 +146,36 @@ class User_model extends CI_Model
         }
     }
 
-    public function searchCustomerByName($name)
+    public function getCustomerNameByID($id)
+    {
+        $condition = "custID='{$id}'";
+
+        $query = $this->db->select('*')
+            ->where($condition)
+            ->get('customers');
+
+        return $query->result();
+        if ($query->num_rows() == 1) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchOrderNames()
+    {
+
+        $query = $this->db->query("SELECT `name` FROM `customers`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+
+    public function searchBlacklistByName($name)
     {
         $condition = "name LIKE '%{$name}%'";
         $condition2 = "`status` = 'blacklisted'";
@@ -136,13 +184,32 @@ class User_model extends CI_Model
             ->where($condition2, NULL, FALSE)
             ->get('customers');
 
-        return $query->result();
+
         if ($query->num_rows() > 0) {
             return $query->result();
         } else {
             return false;
         }
     }
+
+    public function searchCustomerByName($name)
+    {
+        $condition = "name LIKE '%{$name}%'";
+        $condition2 = "`status` = 'whitelisted'";
+
+        $query = $this->db->select('*')
+            ->where($condition, NULL, FALSE)
+            ->where($condition2, NULL, FALSE)
+            ->get('customers');
+
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
 
 
     public function editCustomerData($id, $customer)
@@ -202,18 +269,18 @@ class User_model extends CI_Model
     public function getUserTypes()
     {
         $sql = "SELECT SUBSTRING(COLUMN_TYPE, 6, LENGTH(COLUMN_TYPE) - 6) AS enum_values "
-             . "FROM information_schema.COLUMNS "
-             . "WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'userType';";
-        
+            . "FROM information_schema.COLUMNS "
+            . "WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'userType';";
+
         $query = $this->db->query($sql);
-    
+
         if ($query) {
             return $query->result();
         } else {
             return false;
         }
     }
-    
+
 
     public function getUserData($data)
     {
@@ -242,6 +309,7 @@ class User_model extends CI_Model
             return false;
         }
     }
+
 
     public function updateProfile($data)
     {
@@ -348,4 +416,171 @@ class User_model extends CI_Model
             return false;
         }
     }
+
+    // ----------------------Order Model----------------------------
+
+    public function fetchCreditTermsDB()
+    {
+
+        $query = $this->db->query("SELECT * FROM `creditterms`");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchOrdersWCustomers()
+    {
+        $query = $this->db->query("SELECT orders.*,customers.name FROM orders orders, customers customers where customers.custID = orders.custID");
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchOrdersWCustomerID($id)
+    {
+        $query = $this->db->query("SELECT * FROM orders JOIN customers ON customers.custID = orders.custID WHERE orders.id = $id");
+        //print_r($query->result());
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchOrdersWCreditTerms($id)
+    {
+        $query = $this->db->query("SELECT * FROM orders JOIN creditterms ON creditterms.id = orders.creditTermID WHERE orders.id = $id");
+        //print_r($query->result());
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getOrderProducts($id)
+    {
+        $sql = "SELECT products.*, order_products.*
+          FROM order_products
+          INNER JOIN products ON order_products.product_id = products.productID
+          WHERE order_products.order_id = $id";
+
+        $query = $this->db->query($sql);
+        //print_r($query->result());
+        
+        
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function addOrder($data)
+    {
+
+        $this->db->set('custID', $data['custID']);
+        $this->db->set('value', $data['value']);
+        $this->db->set('creditTermID', $data['creditTermsID']);
+
+
+        $query = $this->db->insert('orders');
+
+        $orderID = $this->db->insert_id();
+
+        $orderProductData = array();
+        foreach ($data['productID'] as $key => $productID) {
+            $orderProductData[] = array(
+                'order_id' => $orderID,
+                'product_id' => $productID,
+                'quantity' => $data['quantity'][$productID]
+            );
+        }
+
+        $this->db->insert_batch('order_products', $orderProductData);
+
+        if ($this->db->affected_rows() > 0) {
+            return (1);
+        } else if ($this->db->affected_rows() == 0) {
+            return (0);
+        } else {
+            return (-1);
+        }
+    }
+
+    public function updatePayment($id)
+    {
+        $condition = "id='{$id}'";
+
+        $this->db->set('isPaid', 1);
+        $this->db->where($condition);
+        $this->db->update('orders');
+
+        if ($this->db->affected_rows() == 1) {
+            return (1);
+        } else if ($this->db->affected_rows() == 0) {
+            return (0);
+        } else {
+            return (-1);
+        }
+    }
+
+    public function addConfirmationRecord($data)
+    {
+
+        $this->db->set('orderID', $data['orderID']);
+        $this->db->set('img', $data['img']);
+        $this->db->set('reciptNo', $data['reciptNo']);
+
+
+        $query = $this->db->insert('payment_records');
+
+        if ($this->db->affected_rows() == 1) {
+            return (1);
+        } else if ($this->db->affected_rows() == 0) {
+            return (0);
+        } else {
+            return (-1);
+        }
+    }
+
+
+
+    public function searchOrderByName($name)
+    {
+        $condition = "name LIKE '%{$name}%'";
+
+        $query = $this->db->query("SELECT orders.*,customers.name FROM orders orders, customers customers where customers.custID = orders.custID AND $condition");
+
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+
+    public function fetchPaymentRecord($id)
+    {
+        $condition = "orderID='{$id}'";
+
+        $query = $this->db->select('*')
+            ->where($condition)
+            ->get('payment_records');
+
+        return $query->result();
+        if ($query->num_rows() == 1) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
 }

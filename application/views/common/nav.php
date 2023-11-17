@@ -90,7 +90,7 @@
         const time = now.toLocaleTimeString();
 
         clockElement.textContent = time;
-    }
+        }
 
     // Update the clock initially
     updateClock();

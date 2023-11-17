@@ -48,7 +48,7 @@
                     <div class="container">
                         <div class="row">
                             <div class=" mt-4 innercont p-5 me-4">
-                                <?php echo form_open('login/searchSubmit'); ?>
+                                <?php echo form_open('login/searchBlacklistSubmit'); ?>
 
                                 <div class="form-group mb-4 d-flex">
                                     <input type="text" name="value" class="form-control" placeholder="Search customer name">
