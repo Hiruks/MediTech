@@ -77,7 +77,7 @@
                                         <div class="container py-3 mb-5">
                                             <div class="row d-flex justify-content-center align-items-center">
                                                 <div class="col-11">
-                                                    <?php echo form_open('login/addOrderSubmit/'. $customer[0]->custID, array('method' => 'post')) ?>
+                                                    <?php echo form_open('login/addOrderSubmit/' . $customer[0]->custID, array('method' => 'post')) ?>
                                                     <div class="d-flex justify-content-between align-items-center mb-4">
 
                                                         <select id="productDropdown" name="product_id" class="form-control" style="width:300px">
@@ -168,12 +168,12 @@
 
 
                                                     <div class="card mb-4">
-                                                        <div class="card-body p-4 d-flex flex-row">
-                                                            <div class="form-group">
+                                                        <div class="card-body p-4  row">
+                                                            <div class="form-group col-md-9">
 
                                                                 <label>Select a credit terms:</label>
 
-                                                                <select name="type" class="form-control">
+                                                                <select name="type" class="form-control" style="max-width:500px;">
                                                                     <?php
                                                                     // Assuming $result contains the query result
                                                                     if ($terms) { // Extract ENUM values and split them into an array
@@ -191,6 +191,10 @@
                                                                 </select>
 
 
+                                                            </div>
+
+                                                            <div class="form-group col-md-3">
+                                                                <span id="totalindicator" style="font-size: 25px;">Rs 0</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -301,6 +305,8 @@
             const label = document.getElementById(labelID);
 
             label.textContent = "Rs " + price * currentQuantity;
+            let i = calculateTotalOrderValue();
+            document.getElementById("totalindicator").innerHTML = "Rs " + i;
 
         }
 
@@ -371,13 +377,16 @@
             quantityInput.name = "product_quantities[" + idlabel.value + "]";
             quantityInput.value = 1; // Set default quantity
             quantityInput.id = "quantity_" + idlabel.value;
+            quantityInput.className = "quantity";
 
             const productIdInput = document.createElement("input");
             productIdInput.type = "hidden";
             productIdInput.name = "product_ids[]";
             productIdInput.value = aproductID;
+            quantityInput.className = "";
 
-            
+
+
 
 
             const quantityContainer = document.createElement("div");
@@ -425,6 +434,7 @@
             removeButton.className = "text-danger";
             removeButton.onclick = function() {
                 removeProductCard(productCardId);
+                removeValues(idlabel.value);
             };
             removeButton.innerHTML = '<i class="fas fa-trash fa-lg"></i';
             removeColumn.appendChild(removeButton);
@@ -446,6 +456,8 @@
             const container = document.getElementById("cont2");
 
             container.appendChild(newProductCard);
+            let i = calculateTotalOrderValue();
+            document.getElementById("totalindicator").innerHTML = "Rs " + i;
             nextProductCardId++;
         }
 
@@ -509,6 +521,27 @@
                 // Remove the specified product card from the DOM
                 productCard.remove();
             }
+        }
+
+        function removeValues(productId) {
+
+            const productIdInput = document.querySelector('input[name="product_ids[]"][value="' + productId + '"]');
+
+            if (productIdInput) {
+                productIdInput.remove();
+            }
+
+            const quantityInput = document.getElementById("quantity_" + productId);
+
+            if (quantityInput) {
+                quantityInput.remove();
+            }
+
+
+            let i = calculateTotalOrderValue();
+            document.getElementById("totalindicator").innerHTML = "Rs " + i;
+
+
         }
     </script>
 </body>

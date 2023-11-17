@@ -47,7 +47,7 @@
 
 
                     <div class="container">
-                        <div class="mt-4 innercont p-5 me-4 rounded" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                        <div class="mt-4 innercont p-5 me-4" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                             <div class="d-flex justify-content-center align-items-center">
                                 
                                 <div class="rounded p-3 shadow" style="max-height: 400px; max-width: 300px;">
