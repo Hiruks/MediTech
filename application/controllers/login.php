@@ -269,10 +269,10 @@ class Login extends CI_Controller
             $data['error'] = $error;
         }
         if (isset($data['error']) || isset($data['success'])) {
-            $this->load->view('dashboard', $data);
+            $this->load->view('dashboard/dashboard', $data);
         } else {
             if ($this->checkSessionExist()) {
-                $this->load->view('dashboard', $data);
+                $this->load->view('dashboard/dashboard', $data);
             } else {
                 $this->load->view('auth/login', $data);
             }
