@@ -126,6 +126,7 @@ class Login extends CI_Controller
                     'login' => true,
                     'name' => $resutlUserData[0]->name
                 );
+
                 if ($resutlUserData[0]->userType == 'Admin') {
                     $actions = array(
                         'dashboard' => [
@@ -247,7 +248,31 @@ class Login extends CI_Controller
                 // update session object with new session data
                 $this->session->set_userdata('userinfo', $session_user);
                 $this->session->set_userdata('routing', $actions);
-                $this->session->set_flashdata('success', 'Login Successful');
+                $this->session->set_flashdata('success', "Successfully Logged in.");
+
+                $termsNo = $this->data_model->getCreditTermsNo(); //int
+                $terms = $this->data_model->fetchCreditTerms();
+
+                foreach ($terms as $term) {
+                    $month = $this->data_model->findOverdueMonth($term->id);
+                    $result = $this->data_model->updateOverdueOrderPerTerm($term->id, $month);
+                }
+
+
+
+                foreach ($terms as $term) {
+                    $month = $this->data_model->findBlacklistMonth($term->id);
+                    $bresult = $this->data_model->findBlacklistableUsers($term->id, $month);
+                    foreach ($bresult as $customer) {
+                        $result = $this->data_model->blacklistCustomers($customer->custID);
+                    }
+                }
+
+
+
+
+
+
                 redirect('login/dashboard');
             } else {
 
@@ -271,25 +296,30 @@ class Login extends CI_Controller
         }
         if (isset($data['error']) || isset($data['success'])) {
             $currentMonth = date('n');
-            $result = $this->data_model->getMonthlySales($currentMonth);
-            $data['orders'] = $result;
-            
-            $this->load->view('dashboard/dashboard', $data);
+            $currentMonth = 11;
 
+            $result = $this->data_model->getMonthlySales($currentMonth);
+            $result2 = $this->data_model->getMonthlyCust($currentMonth);
+
+            $data['orders'] = $result;
+            $data['customers'] = $result2;
+            $data['overdue'] = $this->data_model->fetchOverdueOrders();
+            //print_r($result2);
+            $this->load->view('dashboard/dashboard', $data);
         } else {
             if ($this->checkSessionExist()) {
-                
-                //$currentMonth = date('n');
-                $currentMonth = 11;
-                
+
+                $currentMonth = date('n');
+                $currentMonth = 11; //remove this later
+
                 $result = $this->data_model->getMonthlySales($currentMonth);
                 $result2 = $this->data_model->getMonthlyCust($currentMonth);
-                
+
                 $data['orders'] = $result;
                 $data['customers'] = $result2;
+                $data['overdue'] = $this->data_model->fetchOverdueOrders();
                 //print_r($result2);
                 $this->load->view('dashboard/dashboard', $data);
-
             } else {
                 $this->load->view('auth/login', $data);
             }

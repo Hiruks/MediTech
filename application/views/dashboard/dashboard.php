@@ -52,8 +52,8 @@
                                 <div class="row justify-content-between flex d-flex">
                                     <!-- Upper Data bar -->
                                     <div class="col-sm-4" style="height:auto;">
-                                        <div class="me-3 innercont p-4">
-                                            <div class="value-part d-flex row justify-content-between">
+                                        <div class="me-3 innercont p-4 ">
+                                            <div class="value-part d-flex row justify-content-between pb-4">
                                                 <div class="title col d-flex align-items-center">
                                                     <h2 style="font-weight: 400;">Orders</h2>
                                                     <i class="fas fa-shopping-cart ms-auto fa-lg"></i>
@@ -96,16 +96,34 @@
 
 
                                                 </div>
-                                                <h1 style="font-weight: 600; font-size: 2.7rem;" class="mt-1">6</h1>
+                                                <h1 style="font-weight: 600; font-size: 2.7rem;" class="mt-1">
+                                                    <?php
+                                                    $a = 0;
+                                                    if ($overdue != 0){
+                                                    foreach ($overdue as $od) {
+                                                        $a++;
+                                                    }
+                                                }else{
+                                                    $a = 0;
+                                                }
+                                                    echo $a;
+                                                    ?>
+                                                </h1>
                                                 <div class="col-md-6 mt-5">
 
+                                                    <div class="row">
+                                                        <h3>Total Orders: <?php echo $noOfOrders ?></h3>
 
-                                                    <h3>Overdue Percentage</h3>
+                                                    </div>
 
-                                                    <h3>Blacklisted Percentage</h3>
+                                                    <div class="col">
+                                                        <h3>Overdue Orders: <?php echo $a ?></h3>
+
+                                                    </div>
+
 
                                                 </div>
-                                                <div class="col-md-6" id="main4" style="height:100px;"></div>
+                                                <div class="col-md-6" id="main4" style="height:100px; transform:translateY(-10px); transform:translateX(10px);"></div>
 
                                                 <script type="text/javascript">
                                                     var pie = echarts.init(document.getElementById('main4'));
@@ -133,12 +151,12 @@
                                                                 show: false
                                                             },
                                                             data: [{
-                                                                    value: 1048,
-                                                                    name: 'Overdue'
+                                                                    value: <?php echo $noOfOrders - $a ?>,
+                                                                    name: 'Orders'
                                                                 },
                                                                 {
-                                                                    value: 735,
-                                                                    name: 'Blacklisted'
+                                                                    value: <?php echo $a?>,
+                                                                    name: 'Overdues'
                                                                 },
                                                             ]
                                                         }]
@@ -150,7 +168,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="ms-3 innercont p-4">
-                                            <div class="value-part d-flex row justify-content-between">
+                                            <div class="value-part d-flex row justify-content-between  pb-4">
                                                 <div class="title col d-flex align-items-center">
                                                     <h2 style="font-weight: 400;">Customers</h2>
                                                     <i class="fas fa-users ms-auto fa-lg"></i>
@@ -548,7 +566,7 @@
     .skill-name {
         font-size: 13px;
         font-weight: 500;
-
+        color: #425A82;
         margin: 20px 0;
     }
 

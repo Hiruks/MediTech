@@ -519,6 +519,7 @@ class User_model extends CI_Model
         $condition = "id='{$id}'";
 
         $this->db->set('isPaid', 1);
+        $this->db->set('isOverdue', 0);
         $this->db->where($condition);
         $this->db->update('orders');
 
