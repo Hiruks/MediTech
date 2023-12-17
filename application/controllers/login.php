@@ -9,6 +9,7 @@ class Login extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->model('user_model');
+        $this->load->model('data_model');
         $this->load->library('session');
         $this->load->helper('url');
 
@@ -269,10 +270,26 @@ class Login extends CI_Controller
             $data['error'] = $error;
         }
         if (isset($data['error']) || isset($data['success'])) {
+            $currentMonth = date('n');
+            $result = $this->data_model->getMonthlySales($currentMonth);
+            $data['orders'] = $result;
+            
             $this->load->view('dashboard/dashboard', $data);
+
         } else {
             if ($this->checkSessionExist()) {
+                
+                //$currentMonth = date('n');
+                $currentMonth = 11;
+                
+                $result = $this->data_model->getMonthlySales($currentMonth);
+                $result2 = $this->data_model->getMonthlyCust($currentMonth);
+                
+                $data['orders'] = $result;
+                $data['customers'] = $result2;
+                //print_r($result2);
                 $this->load->view('dashboard/dashboard', $data);
+
             } else {
                 $this->load->view('auth/login', $data);
             }
@@ -1227,7 +1244,7 @@ class Login extends CI_Controller
             } else {
                 //print_r($_POST);
 
-                
+
 
                 $data = array(
                     'custID' => $id,
@@ -1237,9 +1254,9 @@ class Login extends CI_Controller
                     'quantity' => $_POST['product_quantities']
                 );
 
-                if(!($data['productID'] && $data['quantity'])){
+                if (!($data['productID'] && $data['quantity'])) {
                     $this->session->set_flashdata('error', 'Form details cannot be empty');
-                redirect("/login/processOrder/" . $id);
+                    redirect("/login/processOrder/" . $id);
                 }
 
                 $result = $this->user_model->addOrder($data);
@@ -1427,5 +1444,12 @@ class Login extends CI_Controller
         $this->session->set_flashdata('success', 'Logout successful.');
 
         redirect('login/userlogin');
+    }
+
+    public function getCharts()
+    {
+        $result = $this->product_model->getMarks();
+        $data['students'] = $result;
+        $this->load->view('/chart/charts_view', $data);
     }
 }
