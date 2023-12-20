@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="<?php echo site_url(); ?>css/custom/nav.css">
     <link href="<?php echo site_url(); ?>css/custom/public-dashboard.css" rel="stylesheet" />
     <script src="<?php echo base_url('script/echarts.min.js') ?>"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
 
     <title>Dashboard ~ MediTech</title>
 </head>
@@ -29,8 +31,12 @@
 
                 <div class="dynamic-page container m-2">
 
+                    <div class="row">
+                        <h1 style="font-weight: 800; font-size: 2.5rem;" class='col-md-2'>Dashboard</h1>
 
-                    <h1 style="font-weight: 800; font-size: 2.5rem;">Dashboard</h1>
+
+
+                    </div>
 
                     <?php
 
@@ -47,7 +53,185 @@
                     ?>
                     <div class="container">
                         <div class="row">
-                            <div class="col mt-4  p-2">
+                            <div class="col mt-2  p-2">
+
+                                <div class="row  innercont mx-1 mb-4 d-flex">
+                                    <?php $selectedMonth = $month; ?>
+
+
+                                    <div class="align-items-center mb-4 col-md-10 pt-4 ps-4">
+                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" <?php if ($selectedMonth > 12) { ?> checked>
+                                        <?php } else { ?>
+                                            >
+                                        <?php } ?>
+                                        <label class="btn btn-outline-primary" for="btnradio1" onclick="toggleDropdown('yearDropdown', 'productDropdown'), changeYear()">Yearly</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" <?php if ($selectedMonth <= 12) { ?> checked>
+                                    <?php } else { ?>
+                                        >
+                                    <?php } ?>
+                                    <label class="btn btn-outline-primary" for="btnradio2" onclick="toggleDropdown('productDropdown', 'yearDropdown'), changeMonth()">Monthly</label>
+                                        </div>
+                                    </div>
+                                    <div class="  align-items-center mb-4 col-md-2 pt-4 ps-5">
+
+
+
+                                        <select id="productDropdown" name="product_id" class="form-control" style="width:100px; <?php if ($selectedMonth > 12) { ?>display:none;<?php } ?>">
+                                            <option value="1" <?php if ($selectedMonth == 1) echo "selected"; ?>>Jan</option>
+                                            <option value="2" <?php if ($selectedMonth == 2) echo "selected"; ?>>Feb</option>
+                                            <option value="3" <?php if ($selectedMonth == 3) echo "selected"; ?>>Mar</option>
+                                            <option value="4" <?php if ($selectedMonth == 4) echo "selected"; ?>>Apr</option>
+                                            <option value="5" <?php if ($selectedMonth == 5) echo "selected"; ?>>May</option>
+                                            <option value="6" <?php if ($selectedMonth == 6) echo "selected"; ?>>Jun</option>
+                                            <option value="7" <?php if ($selectedMonth == 7) echo "selected"; ?>>Jul</option>
+                                            <option value="8" <?php if ($selectedMonth == 8) echo "selected"; ?>>Aug</option>
+                                            <option value="9" <?php if ($selectedMonth == 9) echo "selected"; ?>>Sep</option>
+                                            <option value="10" <?php if ($selectedMonth == 10) echo "selected"; ?>>Oct</option>
+                                            <option value="11" <?php if ($selectedMonth == 11) echo "selected"; ?>>Nov</option>
+                                            <option value="12" <?php if ($selectedMonth == 12) echo "selected"; ?>>Dec</option>
+                                        </select>
+
+
+
+                                        <select id="yearDropdown" name="year" class="form-control" style="width:100px; <?php if ($selectedMonth <= 12) { ?>display:none;<?php } ?>">
+                                            <?php
+                                            $currentYear = date('Y');
+                                            for ($i = $currentYear; $i >= $currentYear - 10; $i--) {
+                                                echo "<option value=\"$i\"";
+                                                if ($selectedMonth == $i) {
+                                                    echo " selected";
+                                                }
+                                                echo ">$i</option>";
+                                            }
+                                            ?>
+                                        </select>
+
+
+
+
+                                        <div>
+
+                                            <script>
+                                                let selectedValue = document.getElementById("productDropdown").value;
+                                                //console.log(<?php echo $selectedMonth ?>);
+                                                // Function to update the href attribute of the "Add Product" link
+                                                function changeMonth() {
+                                                    const dropdown = document.getElementById("productDropdown");
+                                                    const newSelectedValue = dropdown.value;
+
+                                                    console.log(selectedValue);
+                                                    //const selectedProduct = $products.find(product => product.productID === selectedValue);
+                                                    //console.log(selectedValue);
+                                                    //console.log(selectedProduct);
+
+                                                    if (newSelectedValue !== selectedValue) {
+                                                        selectedValue = newSelectedValue;
+
+                                                        const data = {
+                                                            value: selectedValue
+                                                        };
+
+                                                        // Create an XMLHttpRequest object
+                                                        $.ajax({
+                                                            url: "<?php echo site_url(); ?>login/refreshdash/",
+                                                            data: data,
+                                                            method: "GET",
+                                                            success: function(response) {
+
+                                                                console.log(response);
+                                                                window.location.href = "<?php echo site_url(); ?>login/dashboard/" + selectedValue;
+                                                                //break;
+                                                            },
+                                                            error: function(jqXHR, textStatus, errorThrown) {
+                                                                console.log("AJAX Request Failed: " + errorThrown);
+                                                            }
+                                                        });
+                                                    }
+
+                                                }
+                                                $("#productDropdown").change(changeMonth);
+
+
+                                                //changeMonth();
+                                            </script>
+
+                                        </div>
+
+
+
+                                        <div>
+                                            <script>
+                                                //let selectedValue = document.getElementById("productDropdown").value;
+
+                                                function toggleDropdown(showId, hideId) {
+                                                    let e = "productDropdown";
+                                                    let s = "yearDropdown";
+
+                                                    //if(!>12){
+                                                    document.getElementById(showId).style.display = "block";
+                                                    document.getElementById(hideId).style.display = "none";
+                                                    //}else {
+                                                    //     document.getElementById(s).style.display = "block";
+                                                    // document.getElementById(e).style.display = "none";
+                                                    // }
+
+                                                }
+
+                                                function changeYear() {
+                                                    const dropdown = document.getElementById("yearDropdown");
+                                                    const newSelectedValue = dropdown.value;
+
+                                                    console.log(selectedValue);
+                                                    //const selectedProduct = $products.find(product => product.productID === selectedValue);
+                                                    //console.log(selectedValue);
+                                                    //console.log(selectedProduct);
+
+                                                    if (newSelectedValue !== selectedValue) {
+                                                        selectedValue = newSelectedValue;
+
+                                                        const data = {
+                                                            value: selectedValue
+                                                        };
+
+                                                        // Create an XMLHttpRequest object
+                                                        $.ajax({
+                                                            url: "<?php echo site_url(); ?>login/refreshdash/",
+                                                            data: data,
+                                                            method: "GET",
+                                                            success: function(response) {
+
+                                                                console.log(response);
+                                                                window.location.href = "<?php echo site_url(); ?>login/dashboard/" + selectedValue;
+                                                                //break;
+                                                            },
+                                                            error: function(jqXHR, textStatus, errorThrown) {
+                                                                console.log("AJAX Request Failed: " + errorThrown);
+                                                            }
+                                                        });
+                                                    }
+                                                }
+
+                                                function updateDropdown() {
+                                                    const ydropdown = document.getElementById("yearDropdown");
+                                                    const mdropdown = document.getElementById("productDropdown");
+                                                    if (ydropdown.outerHTML.includes == "checked>") {
+                                                        toggleDropdown('yearDropdown', 'productDropdown');
+                                                    }
+                                                }
+
+                                                $("#yearDropdown").change(changeYear);
+                                                //$("#yearDropdown").update(updateDropdown);
+                                                //$("#productDropdown").update(updateDropdown);
+
+                                                //changeYear();
+                                            </script>
+                                        </div>
+                                    </div>
+
+                                </div>
+
 
                                 <div class="row justify-content-between flex d-flex">
                                     <!-- Upper Data bar -->
@@ -80,8 +264,14 @@
                                                                                         $noOfOrdersP++;
                                                                                     }
                                                                                 }
-                                                                                $outval = $noOfOrdersP / $noOfOrders * 100;
-                                                                                echo $outval;
+                                                                                if ($noOfOrdersP == 0) {
+                                                                                    $outval = 0;
+                                                                                    echo $outval;
+                                                                                } else {
+                                                                                    $outval = $noOfOrdersP / $noOfOrders * 100;
+                                                                                    $outval = intval($outval);
+                                                                                    echo $outval;
+                                                                                }
                                                                                 ?>%" style="max-width:<?php echo $outval; ?>%"></div>
                                                 </div>
                                             </div>
@@ -99,13 +289,15 @@
                                                 <h1 style="font-weight: 600; font-size: 2.7rem;" class="mt-1">
                                                     <?php
                                                     $a = 0;
-                                                    if ($overdue != 0){
-                                                    foreach ($overdue as $od) {
-                                                        $a++;
+                                                    if ($overdue != 0) {
+                                                        foreach ($overdue as $od) {
+                                                            if ($od->isOverdue == 1) {
+                                                                $a++;
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $a = 0;
                                                     }
-                                                }else{
-                                                    $a = 0;
-                                                }
                                                     echo $a;
                                                     ?>
                                                 </h1>
@@ -155,7 +347,7 @@
                                                                     name: 'Orders'
                                                                 },
                                                                 {
-                                                                    value: <?php echo $a?>,
+                                                                    value: <?php echo $a ?>,
                                                                     name: 'Overdues'
                                                                 },
                                                             ]
@@ -194,8 +386,15 @@
                                                                                         $noOfCustP++;
                                                                                     }
                                                                                 }
-                                                                                $outval = $noOfCustP / $noOfCustomers * 100;
-                                                                                echo $outval;
+
+                                                                                if ($noOfCustP == 0) {
+                                                                                    $outval = 0;
+                                                                                    echo $outval;
+                                                                                } else {
+                                                                                    $outval = $noOfCustP / $noOfCustomers * 100;
+                                                                                    $outval = intval($outval);
+                                                                                    echo $outval;
+                                                                                }
                                                                                 ?>%" style="max-width:<?php echo $outval; ?>%"></div>
                                                 </div>
                                             </div>

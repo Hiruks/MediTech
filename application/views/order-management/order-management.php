@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo site_url(); ?>css/custom/nav.css">
     <link href="<?php echo site_url(); ?>css/custom/public-dashboard.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
     <title>Dashboard ~ MediTech</title>
@@ -111,14 +114,29 @@
                                                     } else {
 
                                                         echo "Unpaid";
+
+                                                        
+                                                    if($order->isOverdue == 1){
+                                                        echo "<div class='ms-3 pt-1 pb-1 px-2 alert alert-warning alert-dismissible fade show d-inline-block row' role='alert' type='button' data-dismiss='alert' style=' ' aria-label='Close' aria-hidden='true'>
+                                                        Overdue
+                                                        
+                                                      </div>";
+                                                    }
+                                                    
+
                                                     }
                                                     ?></td>
                                                 <td><?php echo $order->created_date; ?></td>
                                                 <td>
                                                 <div class="flex">
-                                                    <a href="<?php echo site_url(); ?>login/orderUpdate/<?php echo $order->id; ?>" class="btn btn-success shadow-sm btn-sm">Update</a>
+                                                    <a href="<?php echo site_url(); ?>login/orderUpdate/<?php echo $order->id; ?>" class="btn btn-success shadow-sm btn-sm"><?php if ($order->isPaid == 1) {?>Details <?php } else{?>Update<?php }?></a>
                                                 </div>
                                                 </td>
+
+                                                <td>
+                                                    
+                                                </td>
+
 
 
                                             </tr>

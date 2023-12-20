@@ -2,7 +2,7 @@
     <aside>
 
         <div class="sidebarr">
-            <a href="<?php echo site_url(); ?>/login/dashboard" class="list-unstyled">
+            <a href="<?php echo site_url(); ?>/login/dashboard/<?php echo date('n'); ?>" class="list-unstyled">
                 <span class="material-icons">
                     dashboard
                 </span>
@@ -80,7 +80,7 @@
 
                 <!-- reports -->
 
-                <a href="#" class="list-unstyled">
+                <a href="<?php echo site_url(); ?>reports/showpdf" class="list-unstyled">
                     <span class="material-symbols-rounded">
                         description
                     </span>
