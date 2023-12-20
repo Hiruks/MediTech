@@ -10,13 +10,56 @@ class Login extends CI_Controller
         $this->load->library('form_validation');
         $this->load->model('user_model');
         $this->load->model('data_model');
+        //$this->load->controller('mail');
         $this->load->library('session');
         $this->load->helper('url');
 
         date_default_timezone_set("Asia/colombo");
 
         $this->load->library('upload');
+        $this->load->library('phpmailer_lib');
+        $this->load->library('email');
     }
+
+
+
+    function sendReminder($name, $amount, $date, $email)
+    {
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'smtp.office365.com',
+            'smtp_port' => 587,
+            'smtp_user' => 'sales@meditech.work',
+            'smtp_pass' => 'meditech@123', // Use the App Password generated in your Google Account
+            'smtp_crypto' => 'tls', // Use 'ssl' or 'tls'
+            'mailtype' => 'html',
+            'charset' => 'utf-8',
+            'newline' => "\r\n",
+        );
+        $this->email->initialize($config);
+
+        $this->email->from('sales@meditech.work', 'MediTech');
+        $this->email->to($email);
+        $this->email->subject('Overdue payment notification | MediTech');
+
+        $mailContent = "
+        <h1>Overdue Order Notice</h1>
+        <h3>Hi $name,</h3>
+        <p>A credit order placed on $date from Meditech has been overdued recently. The amount overdue is $amount. Please make the necessary payment timely to avoid being blacklisted from our services.</p>
+        <p>Thank you for your attention.</p>
+        <p>MediTech</p>";
+
+        $this->email->message($mailContent);
+
+        if ($this->email->send()) {
+            echo 'Email sent.';
+        } else {
+            echo 'Email could not be sent.';
+            echo $this->email->print_debugger();
+        }
+    }
+
+
 
     public function index()
     {
@@ -255,7 +298,14 @@ class Login extends CI_Controller
 
                 foreach ($terms as $term) {
                     $month = $this->data_model->findOverdueMonth($term->id);
-                    $result = $this->data_model->updateOverdueOrderPerTerm($term->id, $month);
+                    $overdueOrder = $this->data_model->updateOverdueOrderPerTerm($term->id, $month);
+
+                    foreach ($overdueOrder as $ovOrder) {
+                        //$custName = $this->user_model->getCustomerNameByID($ovOrder->custID);
+                        $cust = $this->user_model->getCustomerDataByID($ovOrder->custID);
+                        $overdueAmount = $ovOrder->value;
+                        $this->sendReminder($cust[0]->name, $overdueAmount, $ovOrder->created_date, $cust[0]->email);
+                    }
                 }
 
 
@@ -263,8 +313,10 @@ class Login extends CI_Controller
                 foreach ($terms as $term) {
                     $month = $this->data_model->findBlacklistMonth($term->id);
                     $bresult = $this->data_model->findBlacklistableUsers($term->id, $month);
-                    foreach ($bresult as $customer) {
-                        $result = $this->data_model->blacklistCustomers($customer->custID);
+                    if ($bresult != false) {
+                        foreach ($bresult as $customer) {
+                            $result = $this->data_model->blacklistCustomers($customer->custID);
+                        }
                     }
                 }
 
@@ -272,8 +324,10 @@ class Login extends CI_Controller
 
 
 
+                $currentMonth = date('n');
+                //$currentMonth = 11;
 
-                redirect('login/dashboard');
+                redirect('login/dashboard/' . $currentMonth);
             } else {
 
                 $this->session->set_flashdata('error', 'Invalid email/password. Please try again.');
@@ -282,8 +336,14 @@ class Login extends CI_Controller
         }
     }
 
+    public function refreshdash()
+    {
+        $currentMonth = $_GET['value'];
+        redirect('login/dashboard/' . $currentMonth);
+    }
 
-    public function dashboard()
+
+    public function dashboard($currentMonth)
     {
         $success = $this->session->flashdata('success');
         $error = $this->session->flashdata('error');
@@ -295,29 +355,28 @@ class Login extends CI_Controller
             $data['error'] = $error;
         }
         if (isset($data['error']) || isset($data['success'])) {
-            $currentMonth = date('n');
-            $currentMonth = 11;
+            //$currentMonth = date('n');
+            // $currentMonth = 11;
 
-            $result = $this->data_model->getMonthlySales($currentMonth);
-            $result2 = $this->data_model->getMonthlyCust($currentMonth);
+            $data['orders'] = $this->data_model->getMonthlySales($currentMonth);
+            $data['customers'] = $result2 = $this->data_model->getMonthlyCust($currentMonth);
+            $data['overdue'] = $this->data_model->fetchOverdueOrders($currentMonth);
+            $data['month'] = $currentMonth;
+            //print_r($currentMonth);
 
-            $data['orders'] = $result;
-            $data['customers'] = $result2;
-            $data['overdue'] = $this->data_model->fetchOverdueOrders();
-            //print_r($result2);
             $this->load->view('dashboard/dashboard', $data);
         } else {
             if ($this->checkSessionExist()) {
 
-                $currentMonth = date('n');
-                $currentMonth = 11; //remove this later
+                //$currentMonth = date('n');
+                //$currentMonth = 11; //remove this later
 
-                $result = $this->data_model->getMonthlySales($currentMonth);
-                $result2 = $this->data_model->getMonthlyCust($currentMonth);
+                $data['orders'] = $this->data_model->getMonthlySales($currentMonth);
+                $data['customers'] = $this->data_model->getMonthlyCust($currentMonth);
+                $data['overdue'] = $this->data_model->fetchOverdueOrders($currentMonth);
+                $data['month'] = $currentMonth;
+                //$this->send();
 
-                $data['orders'] = $result;
-                $data['customers'] = $result2;
-                $data['overdue'] = $this->data_model->fetchOverdueOrders();
                 //print_r($result2);
                 $this->load->view('dashboard/dashboard', $data);
             } else {
@@ -1410,6 +1469,39 @@ class Login extends CI_Controller
 
                 $result = $this->user_model->addConfirmationRecord($data);
                 $result2 = $this->user_model->updatePayment($id);
+                $result3 = $this->data_model->getOrderCustomerID($id); //customer_id
+
+                $terms = $this->data_model->fetchCreditTerms();
+                $isWhitelistable = 2; //null
+
+                foreach ($terms as $term) {
+                    $custOrders = $this->data_model->orderByCustomers($result3, $term->id);
+                    $month = $this->data_model->findBlacklistMonth($term->id);
+                    foreach ($custOrders as $order) {
+                        if ($order->isOverdue == 1) {
+                            if ($this->data_model->isBlacklisted($order->id, $month)) {
+                                $isWhitelistable = 0;
+                            } else {
+                                if ($isWhitelistable == 0) {
+                                    break;
+                                } else {
+                                    $isWhitelistable = 1;
+                                }
+                            }
+                        } else {
+                            if ($isWhitelistable == 0) {
+                                break;
+                            } else {
+                                $isWhitelistable = 1;
+                            }
+                        }
+                    }
+                }
+
+                if ($isWhitelistable == 1) {
+                    $result4 = $this->data_model->whitelistCustomer($result3);
+                }
+
 
                 if ($result && $result2 == 1) {
                     $data['success'] = $this->session->set_flashdata('success', 'Payment Confirmation Success');
@@ -1457,6 +1549,21 @@ class Login extends CI_Controller
             $this->load->view('auth/login', $data);
         }
     }
+
+    public function reports()
+    {
+
+        if ($this->checkSessionExist()) {
+
+            $this->load->view('reports/reports.php');
+
+        } else {
+
+            $this->load->view('auth/login', $data);
+
+        }
+    }
+
 
     private function checkSessionExist()
     {
