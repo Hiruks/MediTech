@@ -532,6 +532,8 @@ class User_model extends CI_Model
         }
     }
 
+    
+
     public function addConfirmationRecord($data)
     {
 

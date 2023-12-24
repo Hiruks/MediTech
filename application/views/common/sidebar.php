@@ -81,6 +81,7 @@
                 <!-- reports -->
 
                 <a href="<?php echo site_url(); ?>reports/showpdf" class="list-unstyled">
+
                     <span class="material-symbols-rounded">
                         description
                     </span>

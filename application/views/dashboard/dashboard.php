@@ -55,6 +55,9 @@
                         <div class="row">
                             <div class="col mt-2  p-2">
 
+
+                                <!-- Date selector -->
+
                                 <div class="row  innercont mx-1 mb-4 d-flex">
                                     <?php $selectedMonth = $month; ?>
 
@@ -78,6 +81,8 @@
 
 
 
+                                    <!-- Month Selector -->  
+
                                         <select id="productDropdown" name="product_id" class="form-control" style="width:100px; <?php if ($selectedMonth > 12) { ?>display:none;<?php } ?>">
                                             <option value="1" <?php if ($selectedMonth == 1) echo "selected"; ?>>Jan</option>
                                             <option value="2" <?php if ($selectedMonth == 2) echo "selected"; ?>>Feb</option>
@@ -94,6 +99,8 @@
                                         </select>
 
 
+
+                                    <!-- Year Selector -->  
 
                                         <select id="yearDropdown" name="year" class="form-control" style="width:100px; <?php if ($selectedMonth <= 12) { ?>display:none;<?php } ?>">
                                             <?php
@@ -177,6 +184,7 @@
                                                     // document.getElementById(e).style.display = "none";
                                                     // }
 
+
                                                 }
 
                                                 function changeYear() {
@@ -233,8 +241,9 @@
                                 </div>
 
 
+                                <!-- Top Data Cards -->  
                                 <div class="row justify-content-between flex d-flex">
-                                    <!-- Upper Data bar -->
+                                        <!-- Orders -->
                                     <div class="col-sm-4" style="height:auto;">
                                         <div class="me-3 innercont p-4 ">
                                             <div class="value-part d-flex row justify-content-between pb-4">
@@ -277,6 +286,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                        <!-- Overdue Orders -->
                                     <div class="col-sm-4">
                                         <div class="mx-1 innercont p-4">
                                             <div class="value-part d-flex row justify-content-between">
@@ -358,6 +368,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                        <!-- Customers -->
                                     <div class="col-sm-4">
                                         <div class="ms-3 innercont p-4">
                                             <div class="value-part d-flex row justify-content-between  pb-4">
@@ -402,7 +413,8 @@
                                     </div>
 
                                 </div>
-
+                                
+                                <!-- Total Orders -->  
                                 <div class="row justify-content-between flex d-flex">
                                     <div class=" mt-4 innercont mx-2">
 
@@ -516,7 +528,8 @@
 
                                     </div>
                                 </div>
-
+                                
+                                <!-- Second Chart Section -->  
                                 <div class="row justify-content-between flex d-flex">
                                     <div class="row">
                                         <div class="col-md-6">
