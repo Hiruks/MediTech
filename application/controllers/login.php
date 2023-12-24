@@ -22,7 +22,6 @@ class Login extends CI_Controller
     }
 
 
-
     function sendReminder($name, $amount, $date, $email)
     {
         $config = array(
@@ -34,6 +33,7 @@ class Login extends CI_Controller
             'smtp_crypto' => 'tls', // Use 'ssl' or 'tls'
             'mailtype' => 'html',
             'charset' => 'utf-8',
+
             'newline' => "\r\n",
         );
         $this->email->initialize($config);
@@ -58,8 +58,6 @@ class Login extends CI_Controller
             echo $this->email->print_debugger();
         }
     }
-
-
 
     public function index()
     {
@@ -300,7 +298,9 @@ class Login extends CI_Controller
                     $month = $this->data_model->findOverdueMonth($term->id);
                     $overdueOrder = $this->data_model->updateOverdueOrderPerTerm($term->id, $month);
 
+
                     foreach ($overdueOrder as $ovOrder) {
+
                         //$custName = $this->user_model->getCustomerNameByID($ovOrder->custID);
                         $cust = $this->user_model->getCustomerDataByID($ovOrder->custID);
                         $overdueAmount = $ovOrder->value;
@@ -321,7 +321,7 @@ class Login extends CI_Controller
                 }
 
 
-
+               
 
 
                 $currentMonth = date('n');
@@ -341,8 +341,7 @@ class Login extends CI_Controller
         $currentMonth = $_GET['value'];
         redirect('login/dashboard/' . $currentMonth);
     }
-
-
+  
     public function dashboard($currentMonth)
     {
         $success = $this->session->flashdata('success');
@@ -363,7 +362,6 @@ class Login extends CI_Controller
             $data['overdue'] = $this->data_model->fetchOverdueOrders($currentMonth);
             $data['month'] = $currentMonth;
             //print_r($currentMonth);
-
             $this->load->view('dashboard/dashboard', $data);
         } else {
             if ($this->checkSessionExist()) {

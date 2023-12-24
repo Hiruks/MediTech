@@ -55,7 +55,9 @@
                         <div class="row">
                             <div class="col mt-2  p-2">
 
+
                                 <!-- Date selector -->
+
                                 <div class="row  innercont mx-1 mb-4 d-flex">
                                     <?php $selectedMonth = $month; ?>
 
@@ -78,7 +80,9 @@
                                     <div class="  align-items-center mb-4 col-md-2 pt-4 ps-5">
 
 
+
                                     <!-- Month Selector -->  
+
                                         <select id="productDropdown" name="product_id" class="form-control" style="width:100px; <?php if ($selectedMonth > 12) { ?>display:none;<?php } ?>">
                                             <option value="1" <?php if ($selectedMonth == 1) echo "selected"; ?>>Jan</option>
                                             <option value="2" <?php if ($selectedMonth == 2) echo "selected"; ?>>Feb</option>
@@ -95,7 +99,9 @@
                                         </select>
 
 
+
                                     <!-- Year Selector -->  
+
                                         <select id="yearDropdown" name="year" class="form-control" style="width:100px; <?php if ($selectedMonth <= 12) { ?>display:none;<?php } ?>">
                                             <?php
                                             $currentYear = date('Y');
@@ -178,6 +184,7 @@
                                                     // document.getElementById(e).style.display = "none";
                                                     // }
 
+
                                                 }
 
                                                 function changeYear() {
@@ -232,6 +239,7 @@
                                     </div>
 
                                 </div>
+
 
                                 <!-- Top Data Cards -->  
                                 <div class="row justify-content-between flex d-flex">
