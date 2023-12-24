@@ -33,7 +33,7 @@
 
                     <div class="container">
                         <div class="row">
-                        <div class="col mt-4 innercont p-5 me-4">
+                            <div class="col mt-4 innercont p-5 me-4">
                                 <a href="<?php echo site_url(); ?>reports/customerPdf" class="btn btn-primary btn-sm">Customer Details</a>
                                 <a href="<?php echo site_url(); ?>reports/showpdf" class="btn btn-primary btn-sm">Order Details</a>
                             </div>
