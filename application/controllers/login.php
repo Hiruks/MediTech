@@ -26,10 +26,7 @@ class Login extends CI_Controller
     {
         $config = array(
             'protocol' => 'smtp',
-            'smtp_host' => 'smtp.office365.com',
-            'smtp_port' => 587,
-            'smtp_user' => 'sales@meditech.work',
-            'smtp_pass' => 'meditech@123', // Use the App Password generated in your Google Account
+            
             'smtp_crypto' => 'tls', // Use 'ssl' or 'tls'
             'mailtype' => 'html',
             'charset' => 'utf-8',
